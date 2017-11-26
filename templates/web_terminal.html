@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta property="wb:webmaster" content="919f195f21f2ad8f">
+    <link rel="icon" href="/static/images/favicon.ico?v=1" type="image/x-icon">
+    <title>主机 {{ hostname }} Web 终端</title>
+    <link href="/static/css/terminal.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        body {
+            background: black
+        }
+
+        .topbar {
+            background: #222;
+            height: 22px;
+            position: relativeoverflow: hidden
+        }
+
+        .tip {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 2
+        }
+
+        .tip p {
+            padding: 3px 15px;
+            background: #658BA0;
+            color: white;
+            text-align: center;
+            width: 370px;
+            margin: 0 auto;
+        }
+
+        .pipe {
+            margin: 3px 0;
+            height: 1px;
+            background: #666
+        }
+
+        .dropdown {
+            width: 130px;
+            height: 22px;
+            z-index: 3
+        }
+
+        .message {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 22px;
+            color: #CEC17E;
+            line-height: 22px;
+            vertical-align: middle;
+            text-align: center;
+            display: none;
+            z-index: 0
+        }
+
+        .fullscreen {
+            position: fixed;
+            top: 2px;
+            right: 20px;
+            cursor: pointer;
+            display: none
+        }
+
+        .mid-canvas {
+            display: block;
+            margin: 0 auto
+        }
+
+        input.dropdown-toggle {
+            height: 22px
+        }
+
+        .dropdown-text {
+            line-height: 22px;
+            border: 0 none
+        }
+
+        .dropdown-text::after {
+            top: 10px
+        }
+
+        .dropdown-content:hover, .dropdown-toggle:focus ~ .dropdown-content {
+            top: 24px
+        }
+
+        .dropdown-content {
+            top: 24px;
+            width: 130px;
+        }</style>
+    <script type="text/javascript" src="/static/js/terminal/webutil.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/base64.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/websock.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/des.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/keysymdef.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/keyboard.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/input.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/display.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/jsunzip.js?v=3"></script>
+    <script type="text/javascript" src="/static/js/terminal/rfb.js?v=4"></script>
+</head>
+<body class="modal-ready">
+<div class="container">
+    <div class="topbar">
+        <div class="tip" style="display: none;"><p>提示：若出现持续黑屏，则表示屏幕处在休眠状态，按任意键即可。</p></div>
+        <div class="message" style="display: block;">* 注意：缺省的登录用户和密码可查看
+            <a href="/gd1/images/centos68x64a/" target="_blank"> 映像描述 </a>，若自定义了密码，请使用您设定的密码进行登录。
+        </div>
+        <div class="send-buttons">
+            <div class="dropdown"><input class="dropdown-toggle" type="text">
+                <div class="dropdown-text">按键操作</div>
+                <div class="dropdown-content"><a class="btn" id="sendCtrlAltBackspaceButton">Ctrl-Alt-Backspace</a>
+                    <div class="pipe"></div>
+                    <a class="btn sendCtrlAltFunctionButton" data-n="1">Ctrl-Alt-F1</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="2">Ctrl-Alt-F2</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="3">Ctrl-Alt-F3</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="4">Ctrl-Alt-F4</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="5">Ctrl-Alt-F5</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="6">Ctrl-Alt-F6</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="7">Ctrl-Alt-F7</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="8">Ctrl-Alt-F8</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="9">Ctrl-Alt-F9</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="10">Ctrl-Alt-F10</a><a
+                            class="btn sendCtrlAltFunctionButton" data-n="11">Ctrl-Alt-F11</a></div>
+            </div>
+        </div>
+    </div>
+    <canvas id="noVNC_canvas" class="mid-canvas" width="800" height="600" style="cursor: default;">
+        Canvas not supported.
+    </canvas>
+</div>
+<script type="text/javascript" src="/jsi18n/1494516808/"></script>
+<script type="text/javascript">var INCLUDE_URI = '/static/js/terminal/';</script>
+<script src="/static/js/terminal/util.js?v=3"></script>
+<script src="/static/js/libs/jquery/jquery.js"></script>
+<script src="/static/js/libs/oz/oz.js"></script>
+<script>
+    require.config({baseUrl: '/static/js/', loader: 'libs/oz/oz.js'});
+    define('underscore-src', 'libs/underscore/underscore.js');
+    define('underscore', ['underscore-src'], function () {
+        return _;
+    });
+    require(['underscore', 'mods/cookie.amd'], function (_, cookie) {
+        var $target = $('#noVNC_canvas');
+        var $tip = $('.tip');
+        var $p = $tip.find('p');
+        var $message = $('.message');
+        var $fullscreen = $('.fullscreen');
+        var TIP = "提示：若出现持续黑屏，则表示屏幕处在休眠状态，按任意键即可。";
+        var zone = '{{ zone }}';
+        var password, host, securePort;
+        var data = {'zone': zone, 'owner': 'usr-VjZUkdqO', 'instances': ['{{ hostname }}'], 'is_cluster_node': 0 || 0};
+        var rg_data = {'zone': zone, 'instances': ['{{ hostname }}']};
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        };
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        var resource_group = getCookie('resource_group');
+        var params = '';
+        if (resource_group && resource_group !== 'self_resources') {
+            params = JSON.stringify($.extend({}, rg_data, {
+                verbose: 1,
+                action: 'DescribeInstances',
+                sub_channel: 'resource_sharing'
+            }));
+        } else {
+            params = JSON.stringify($.extend({}, data, {verbose: 1, action: 'DescribeInstances'}));
+        }
+        $.post('/api', {params: params}, function (resp) {
+            var instance = resp.instance_set[0];
+            password = instance.graphics_passwd;
+            var isLinux = instance.image.platform === 'linux' ? true : false;
+            var isWin2k8 = instance.image.image_id.indexOf('win2k8') !== -1;
+            var image_url = '/' + zone + '/images/' + instance.image.image_id + '/';
+            if (isLinux) {
+                $('#sendCtrlAltDelButton').remove();
+                $('.fullscreen').remove();
+            }
+            var tip_msg = interpolate(gettext('NOTE_TERMINAL_VNC_USERNAME_PASSWORD %s'), [image_url]);
+            $message.html(tip_msg);
+            var broker_params = '';
+            if (resource_group && resource_group !== 'self_resources') {
+                broker_params = JSON.stringify($.extend({}, rg_data, {
+                    action: 'CreateBrokers',
+                    sub_channel: 'resource_sharing'
+                }));
+            } else {
+                broker_params = JSON.stringify($.extend({}, data, {action: 'CreateBrokers'}));
+            }
+            $.post('/api', {params: broker_params}, function (resp) {
+                var broker = resp.brokers[0];
+                host = broker.broker_host;
+                securePort = broker.broker_port;
+                Util.load_scripts(["webutil.js?v=3", "base64.js?v=3", "websock.js?v=3", "des.js?v=3", "keysymdef.js?v=3", "keyboard.js?v=3", "input.js?v=3", "display.js?v=3", "jsunzip.js?v=3", "rfb.js?v=4"]);
+                var isHttps = location.protocol === 'https:';
+                var retryCount = 0;
+                window.onscriptsload = function () {
+                    var rfb = new RFB({
+                        'connectTimeout': 50,
+                        'target': $D('noVNC_canvas'),
+                        'encrypt': isHttps,
+                        'onUpdateState': function (rfb, state, oldstate, statusMsg) {
+                            var msg = '';
+                            switch (state) {
+                                case 'disconnected':
+                                    msg = gettext('Connection Failed');
+                                    if (instance.image.os_family === 'freebsd') {
+                                        if (retryCount < 4) {
+                                            setTimeout(function () {
+                                                rfb.connect(host, securePort, password, consoleTitle);
+                                                retryCount++;
+                                            }, 2000)
+                                        }
+                                    }
+                                    break;
+                                case 'normal':
+                                    var width = 810;
+                                    var height = 700;
+                                    if (!isLinux) {
+                                        width = 1034;
+                                        height = 870;
+                                    }
+                                    if (isWin2k8) {
+                                        width = 800;
+                                        height = 675;
+                                    }
+                                    window.resizeTo(width, height);
+                                    msg = gettext('Connection Successful');
+                                    $p.html(msg);
+                                    setTimeout(function () {
+                                        $p.html(TIP);
+                                    }, 2000);
+                                    setTimeout(function () {
+                                        $tip.slideUp();
+                                        $message.show();
+                                        $fullscreen.show();
+                                    }, 5000);
+                                    break;
+                                default:
+                                    return;
+                            }
+                            $p.html(msg);
+                        }
+                    });
+                    var consoleTitle = "i-ciqkq97c";
+                    $("#sendCtrlAltDelButton").on('click', function (e) {
+                        rfb.sendCtrlAltDel();
+                    });
+                    $("#sendCtrlAltBackspaceButton").on('click', function (e) {
+                        rfb.sendCtrlAltBackspace();
+                    });
+                    $(".sendCtrlAltFunctionButton").on('click', function (e) {
+                        var n = $(this).attr('data-n');
+                        rfb.sendCtrlAltFunction(n);
+                    });
+                    function requestFullscreen(elem) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullScreen) {
+                            if (window.navigator.userAgent.toUpperCase().indexOf('CHROME') >= 0) {
+                                elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                            } else {
+                                elem.webkitRequestFullScreen();
+                            }
+                        } else if (elem.mozRequestFullScreen) {
+                            elem.mozRequestFullScreen();
+                        }
+                    }
+
+                    function exitFullscreen() {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitCancelFullScreen) {
+                            document.webkitCancelFullScreen();
+                        } else if (document.mozCancelFullScreen) {
+                            document.mozCancelFullScreen();
+                        }
+                    }
+
+                    function fullscreen() {
+                        return document.fullscreen || document.webkitIsFullScreen || document.mozFullScreen || false;
+                    }
+
+                    $(".fullscreen").on('click', function (e) {
+                        if (!fullscreen()) {
+                            requestFullscreen(document.documentElement);
+                        } else {
+                            exitFullscreen();
+                        }
+                    });
+                    $(document).bind('fullscreenchange webkitfullscreenchange mozfullscreenchange', function () {
+                        $('.fullscreen a').html(fullscreen() ? '[' + gettext('Exit Full Screen') + ']' : '[' + gettext('Enter Full Screen') + ']');
+                    });
+                    rfb.connect(host, securePort, password, consoleTitle);
+                };
+            });
+        });
+    });
+</script>
+</body>
+</html>
