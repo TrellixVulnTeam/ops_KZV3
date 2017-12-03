@@ -43,10 +43,25 @@
             </span>
         </a>
         <ul class="treeview-menu">
-            <li class="grouplist"><a href="/users/grouplist"><i class="fa fa-circle-o"></i> 任务管理</a></li>
-            <li class="userlist"><a href="/users/userlist"><i class="fa fa-circle-o"></i> 创建任务</a></li>
-            <li class="userlist"><a href="/users/userlist"><i class="fa fa-circle-o"></i> 查询任务</a></li>
+            <li class="tasklist"><a href="{% url 'task_list' %}"><i class="fa fa-circle-o"></i> 任务管理</a></li>
+            <li class="taskadd"><a href="{% url 'task_add' %}"><i class="fa fa-circle-o"></i> 创建任务</a></li>
+            <li class="tasksearch"><a href="{% url 'task_search' %}"><i class="fa fa-circle-o"></i> 查询任务</a></li>
         </ul>
     </li>
 
+
+    <li class="treeview" id="platform">
+        <a href="#">
+            <i class="fa fa-cloud"></i>
+            <span>数据库系统</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+{#        <ul class="treeview-menu">#}
+{#            <li class="tasklist"><a href="{% url 'task_list' %}"><i class="fa fa-circle-o"></i> 任务管理</a></li>#}
+{#            <li class="taskadd"><a href="{% url 'task_add' %}"><i class="fa fa-circle-o"></i> 创建任务</a></li>#}
+{#            <li class="tasksearch"><a href="{% url 'task_search' %}"><i class="fa fa-circle-o"></i> 查询任务</a></li>#}
+{#        </ul>#}
+    </li>
 </ul>
