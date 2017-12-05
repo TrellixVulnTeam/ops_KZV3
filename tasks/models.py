@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 
+
 TASK_TYPE = (
     (str(1), u"数据库"),
     (str(2), u"gitlab"),

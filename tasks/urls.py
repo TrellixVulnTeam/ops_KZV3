@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^task/search/$', task_search, name='task_search'),
     url(r'^task/getlist/$', get_tasklist, name='get_task_list'),
     url(r'^task/edit/$', task_edit, name='task_edit'),
+
 ]

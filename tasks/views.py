@@ -25,7 +25,9 @@ def task_list(request):
 
 @login_required()
 def get_tasklist(request):
-
+    """
+    获取任务列表
+    """
     offset = request.GET.get('offset', None)
     limit = request.GET.get('limit', None)
     sort = request.GET.get('sort', None)
@@ -91,7 +93,7 @@ def task_add(request):
 @login_required()
 def task_del(request):
     """
-       组列表
+       查看任务列表
        :param request:
        :return:
        """
@@ -115,27 +117,17 @@ def task_del(request):
 def task_edit(request):
     """
        编辑任务
+       查看详情
        :param request:
        :return:
        """
     # task_all = Task.objects.all()
-    task_id = request.GET.get('id', None)
-    task_applyer_name = Task.objects.filter(id=task_id)
-    task_name = request.GET.get('task_name', None)
-    task_desc = request.GET.get('task_desc', None)
-    task_type = request.GET.get('task_type', None)
-    if request.method == 'POST':
-        task_form = TaskModelForm(request.POST)
+    if request.method == 'GET':
+        task_id = request.GET.get('id', None)
+        task = Task.objects.get(id=task_id)
         # TODO:获取表单错误信息
-        # print(form.errors)
-        print(task_form.errors.as_json())
-        if task_id:
-            task = Task.objects.filter(id=task_id)
-            finish_time = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M')
-            task_approve_name = request.user.username
-            task.objects.filter(id=task_id).update(finish_time=finish_time, task_approve_name=task_approve_name)
-        return HttpResponseRedirect(reverse(task_list))
-    return render(request, 'tasks/task_edit.html', locals())
+        # print(form.errors）
+        return render(request, 'tasks/task_edit.html', locals())
 
 
 @login_required()
@@ -148,3 +140,39 @@ def task_search(request):
     header_title, sub_title, path1, path2 = "", "", "任务管理", "查询任务"
     # return render_to_response('user/group_list.html', locals())
     return render(request, 'tasks/task_detail.html', locals())
+
+@login_required()
+def task_sucess(request):
+    """
+       审批通过任务
+       :param request:
+       :return:
+       """
+    # task_all = Task.objects.all()
+    if request.method == 'GET':
+        task_id = request.GET.get('id', None)
+        task = Task.objects.get(id=task_id)
+        # TODO:获取表单错误信息
+        # print(form.errors)
+        finish_time = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M')
+        task_approve_name = request.user.username
+        Task.objects.filter(id=task_id).update(finish_time=finish_time, task_approve_name=task_approve_name)
+        return render(request, 'tasks/task_edit.html', locals())
+
+@login_required()
+def task_refuse(request):
+    """
+       拒绝任务
+       :param request:
+       :return:
+       """
+    # task_all = Task.objects.all()
+    if request.method == 'GET':
+        task_id = request.GET.get('id', None)
+        task = Task.objects.get(id=task_id)
+        # TODO:获取表单错误信息
+        # print(form.errors)
+        finish_time = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M')
+        task_approve_name = request.user.username
+        Task.objects.filter(id=task_id).update(finish_time=finish_time, task_approve_name=task_approve_name)
+        return render(request, 'tasks/task_edit.html', locals())
