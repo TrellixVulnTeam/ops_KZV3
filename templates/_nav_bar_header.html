@@ -198,6 +198,11 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                     <img src="/static/images/user2-160x160.jpg" class="user-image" alt="User Image">
                 </a>
+                <p>
+                    {{ request.user.username }}
+                    {{ request.user.email }}
+                    {{ session_user_id  }}
+                </p>
                 <ul class="dropdown-menu" style="width:100px;">
                     <!-- User image
                     <li class="user-header">

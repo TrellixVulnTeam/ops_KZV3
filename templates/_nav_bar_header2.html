@@ -28,7 +28,14 @@
             <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                     <img src="/static/images/user2-160x160.jpg" class="user-image" alt="User Image">
+
                 </a>
+                <a>
+                    {{ request.user.username }}
+{#                    {{ request.user.email }}#}
+{#                    {{ session_user_id  }}#}
+                    </a>
+
                 <ul class="dropdown-menu" style="width:100px;">
                     <li>
                         <a href="{% url 'user_profile' %}" data-permalink="" style="height: 40px;

@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-
+{% load mytags %}
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
@@ -22,7 +22,7 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="col-sm-10">
-                        <form id="user_form" method="post" class="form-horizontal">
+                        <form id="task_form" method="post" class="form-horizontal">
                             <div class="form-group">
                                 <label class="control-label col-sm-2">任务名<span class="text-red">*</span>：</label>
                                 <div class="col-sm-8">
@@ -32,33 +32,41 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="control-label col-sm-2">任务类型<span class="text-red">*</span>：</label>
-                                <div class="col-sm-8">
-                                    {{ task_form.task_type }}
+                                <div class="col-sm-2">
+                                 <select name="task_type" class="form-control m-b input-sm" >
+{#                                    {{ task_form.task_type }}#}
+                                    {% for type in task_types %}
+                                        {% ifequal type.0|int2str task_type %}
+                                            <option value="{{ type.1 }}" selected> {{ type.1 }}</option>
+                                        {% else %}
+                                            <option value="{{ type.1 }}"> {{ type.1 }}</option>
+                                        {% endifequal %}
+                                    {% endfor %}
+                                 </select>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="control-label col-sm-2">描述<span class="text-red">*</span>：</label>
-                                <div class="col-sm-8">
-                                    {{ task_form.task_desc }}
-                                </div>
+                                  <label for="memo" class="col-sm-2 control-label">描述信息<span class="text-red">*</span>：</label>
+                                  <div class="col-sm-8" >
+                                     {{ task_form.task_desc }}
+                                  </div>
                             </div>
-                            <div class="hr-line-dashed"></div>
 
-                            <div class="form-group">
-                                <label class="control-label col-sm-2">审批人：</label>
-                                <div class="col-sm-8">
-                                    <select id="groups" name="groups" class="form-control m-b" multiple size="8">
-                                        {% for group in group_all %}
-                                            {% if forloop.first %}
-                                                <option value="{{ group.id }}" selected>{{ group.name }}</option>
-                                            {% else %}
-                                                <option value="{{ group.id }}">{{ group.name }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
+{#                            <div class="form-group">#}
+{#                                <label class="control-label col-sm-2">审批人：</label>#}
+{#                                <div class="col-sm-8">#}
+{#                                    <select id="groups" name="groups" class="form-control m-b" multiple size="8">#}
+{#                                        {% for group in group_all %}#}
+{#                                            {% if forloop.first %}#}
+{#                                                <option value="{{ group.id }}" selected>{{ group.name }}</option>#}
+{#                                            {% else %}#}
+{#                                                <option value="{{ group.id }}">{{ group.name }}</option>#}
+{#                                            {% endif %}#}
+{#                                        {% endfor %}#}
+{#                                    </select>#}
+{#                                </div>#}
+{#                            </div>#}
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
@@ -77,6 +85,11 @@
 
 {% block self_footer_js %}
     <script>
+        function change_info(){
+            var args = $("#task_form").serialize();
+            window.location = "{% url 'task' %}?" + args
+        }
+
         $('#user_form').validator({
             timely: 2,
             theme: "yellow_right_effect",
