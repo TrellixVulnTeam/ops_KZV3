@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">查看任务</h3>
+                    <h3 class="box-title">我申请的任务</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
@@ -57,7 +57,7 @@
                                             <tbody>
                                                 {% for ds in task_all %}
                                                 <tr>
-                                                    {% if ds.is_finished %}
+                                                    {% if ds.task_applyer_name == request.user.username %}
                                                     <td>
                                                         <label>
                                                             <span class="lbl"></span>

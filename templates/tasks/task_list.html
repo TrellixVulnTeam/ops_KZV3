@@ -142,7 +142,7 @@
                         align: 'center'
                     }
                     , {
-                        field: 'is_active',
+                        field: 'is_finished',
                         title: '状态',
                         align: 'center',
                         formatter: activeFormatter
@@ -167,29 +167,57 @@
         function operateFormatter(value, row, index) {
             return [
                 '<a class="edit btn btn-xs btn-default" href="javascript:void(0)" title="edit">',
-                '<i class="fa fa-edit"></i> 编辑</a> ',
+                '<i class="fa fa-tasks"></i> 详情</a> ',
+                '<a class="verify btn btn-xs btn-danger" href="javascript:void(0)" title="verify">',
+                '<i class="fa fa-wrench"></i> 审批',
+                '</a>'
             ].join('');
         }
         //状态列
         function activeFormatter(value, row, index) {
             //alert(value);
             s = '';
-            if (value == true) {
-                s = '是';
+            if (value == 1) {
+                s = "<span style='color:blue;'>已审批</span>";
             }
             else {
-                s = "<span style='color:red;'>否</span>";
+                s = "<span style='color:red;'>待审批</span>";
             }
             return s;
         }
         window.operateEvents = {
-            'click .edit': function (e, value, row, index) {
+             'click .edit': function (e, value, row, index) {
                 Edit(row.id);
+            },
+            'click .verify': function (e, value, row, index) {
+                BootstrapDialog.confirm({
+                    title: "审批",
+                    type: BootstrapDialog.TYPE_WARNING,
+                    message: "确定审批 <span class='red'>" + row.task_name + "</span> 吗？",
+                    draggable: true,
+                    btnCancelLabel: '放弃',
+                    btnCancelClass: 'btn-white',
+                    btnOKLabel: '确认',
+                    callback: function (result) {
+                        if (result) {
+                            var ids = [row.id];
+                            $.post("{% url 'task_success' %}", {ids: ids}, function (data) {
+                                    if (data.code != 0) {
+                                        $table.bootstrapTable("refresh");
+                                        dialogItself.close();
+                                    }
+                                    else BootstrapDialog.alert(data.message);
+
+                                }, "json"
+                            );
+                        }
+                    }
+                });
             }
         };
         function Edit(id) {
             var addDialog = new BootstrapDialog({
-                    title: "查看任务信息",
+                    title: "任务详情",
                     message: function (dialog) {
                         var $message = $('<div></div>');
                         var pageToLoad = dialog.getData('pageToLoad');
@@ -200,29 +228,29 @@
                     data: {
                         'pageToLoad': "{% url 'task_edit' %}?id=" + id
                     },
-                    buttons: [{
-                        cssClass: "btn-default",
-                        label: "通过",
-                        action: function (dialogItself) {
-                            ////提交表单数据之前，先选中右侧
-                            $('#users_selected option').each(function () {
-                                $(this).prop('selected', true)
-                            });
-
-                            /*$("#group_from").validator({
-                             valid: function (form) {
-                             form.submit();
-                             }
-                             });*/
-
-                        }
-                    }, {
-                        label: "拒绝",
-                        cssClass: 'btn-white',
-                        action: function (dialogItself) {
-                            dialogItself.close();
-                        }
-                    }]
+{#                    buttons: [{#}
+{#                        cssClass: "btn-default",#}
+{#                        label: "通过",#}
+{#                        action: function (dialogItself) {#}
+{#                            ////提交表单数据之前，先选中右侧#}
+{#                            $('#users_selected option').each(function () {#}
+{#                                $(this).prop('selected', true)#}
+{#                            });#}
+{##}
+{#                            /*$("#group_from").validator({#}
+{#                             valid: function (form) {#}
+{#                             form.submit();#}
+{#                             }#}
+{#                             });*/#}
+{##}
+{#                        }#}
+{#                    }, {#}
+{#                        label: "拒绝",#}
+{#                        cssClass: 'btn-white',#}
+{#                        action: function (dialogItself) {#}
+{#                            dialogItself.close();#}
+{#                        }#}
+{#                    }]#}
                 })
             ;
             addDialog.open();
@@ -233,38 +261,38 @@
             initTable();
 
             // delete button
-            $("#btn_remove").click(function () {
-                var selected = $table.bootstrapTable('getSelections');
-                if ($(selected).length > 0) {
-                    BootstrapDialog.confirm({
-                        title: "警告",
-                        message: "确定删除选中的" + $(selected).length + "任务吗？",
-                        type: BootstrapDialog.TYPE_WARNING,
-                        btnCancelLabel: '放弃',
-                        btnCancelClass: 'btn-white',
-                        btnOKLabel: '确认',
-                        //btnOKClass: 'btn-default',
-                        callback: function (result) {
-                            if (result) {
-                                var ids = new Array($(selected).length);
-                                $.each(selected, function (index, value) {
-                                    ids[index] = value.id;
-                                });
-                                $.post("{% url 'user_del' %}", {ids: ids}, function (data) {
-                                        if (data.code != 0) {
-                                            $table.bootstrapTable("refresh");
-                                            dialogItself.close();
-                                        }
-                                        else BootstrapDialog.alert(data.message);
-
-                                    }, "json"
-                                );
-                            }
-                        }
-                    });
-                }
-                else BootstrapDialog.warning("请选择要删除的行");
-            });
+{#            $("#btn_verify").click(function () {#}
+{#                var selected = $table.bootstrapTable('getSelections');#}
+{#                if ($(selected).length > 0) {#}
+{#                    BootstrapDialog.confirm({#}
+{#                        title: "警告",#}
+{#                        message: "确定删除选中的" + $(selected).length + "任务吗？",#}
+{#                        type: BootstrapDialog.TYPE_WARNING,#}
+{#                        btnCancelLabel: '放弃',#}
+{#                        btnCancelClass: 'btn-white',#}
+{#                        btnOKLabel: '确认',#}
+{#                        //btnOKClass: 'btn-default',#}
+{#                        callback: function (result) {#}
+{#                            if (result) {#}
+{#                                var ids = new Array($(selected).length);#}
+{#                                $.each(selected, function (index, value) {#}
+{#                                    ids[index] = value.id;#}
+{#                                });#}
+{#                                $.post("{% url 'user_del' %}", {ids: ids}, function (data) {#}
+{#                                        if (data.code != 0) {#}
+{#                                            $table.bootstrapTable("refresh");#}
+{#                                            dialogItself.close();#}
+{#                                        }#}
+{#                                        else BootstrapDialog.alert(data.message);#}
+{##}
+{#                                    }, "json"#}
+{#                                );#}
+{#                            }#}
+{#                        }#}
+{#                    });#}
+{#                }#}
+{#                else BootstrapDialog.warning("请选择要删除的行");#}
+{#            });#}
         });
     </script>
 {% endblock %}

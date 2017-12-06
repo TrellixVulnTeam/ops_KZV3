@@ -7,9 +7,12 @@ from tasks.views import *
 urlpatterns = [
     url(r'^task/$', task_list, name='task'),
     url(r'^task/add/$', task_add, name='task_add'),
-    url(r'^task/del/$', task_del, name='task_del'),
     url(r'^task/search/$', task_search, name='task_search'),
     url(r'^task/getlist/$', get_tasklist, name='get_task_list'),
     url(r'^task/edit/$', task_edit, name='task_edit'),
+    url(r'^task/edit/success$', task_success, name='task_success'),
+    url(r'^task/detail/$', task_detail, name='task_detail'),
+    url(r'^task/todo/$', task_todo, name='task_todo'),
+    url(r'^task/myself/$', task_myself, name='task_myself'),
 
 ]

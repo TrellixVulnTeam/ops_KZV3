@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">查看任务</h3>
+                    <h3 class="box-title">待办任务</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
@@ -57,11 +57,10 @@
                                             <tbody>
                                                 {% for ds in task_all %}
                                                 <tr>
-                                                    {% if ds.is_finished %}
                                                     <td>
                                                         <label>
                                                             <span class="lbl"></span>
-                                                                <a href="/user/{{ ds.id }}">
+                                                                <a href="{% url 'task_edit' %}?id=" + ds.id>
                                                                     {{ ds.id }}
                                                                 </a>
                                                         </label>
@@ -90,9 +89,12 @@
                                                             {{ ds.finish_time }}
                                                         </td>
                                                         <td>
-                                                            完成
+                                                            {%  if ds.is_finished ==  '1'  %}
+                                                                完成
+                                                            {% else %}
+                                                                待审核
+                                                            {% endif %}
                                                         </td>
-                                                {% endif %}
                                                 </tr>
                                                 {% endfor %}
 

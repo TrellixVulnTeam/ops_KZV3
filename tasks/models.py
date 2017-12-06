@@ -24,6 +24,7 @@ class Task(models.Model):
     task_executer = models.CharField(u"执行人", max_length=30, null=True)
     apply_time = models.CharField(u"提交时间", max_length=30, null=True)
     finish_time = models.CharField(u"完成时间", max_length=30, null=True)
+    is_finished = models.CharField(u"完成时间", max_length=30, null=True)
 
     def __unicode__(self):
         return self.name

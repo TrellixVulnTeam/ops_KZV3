@@ -24,6 +24,29 @@ def task_list(request):
     return render(request, 'tasks/task_list.html', locals())
 
 @login_required()
+def task_search(request):
+    """
+       组列表
+       :param request:
+       :return:
+       """
+    header_title, sub_title, path1, path2 = "", "", "任务管理", "查询任务"
+    return render(request, 'tasks/task_search.html', locals())
+
+@login_required()
+def task_detail(request):
+    """
+       组列表
+       :param request:
+       :return:
+       """
+    header_title, sub_title, path1, path2 = "", "", "任务管理", "测试任务"
+    task_all = Task.objects.all()
+    return render(request, 'tasks/task_detail.html', locals())
+
+
+
+@login_required()
 def get_tasklist(request):
     """
     获取任务列表
@@ -56,6 +79,7 @@ def get_tasklist(request):
             'task_executer': g.task_executer,
             'apply_time': g.apply_time,
             'finish_time': g.finish_time,
+            'is_finished': g.is_finished,
         } for g in task_list]
     data = {'total': count, 'rows': rows}
     return JsonResponse(data)
@@ -80,7 +104,8 @@ def task_add(request):
         task_desc = request.POST.get('task_desc', '')
         task_applyer_name = request.user.username
         apply_time = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M')
-        task = Task(task_name=task_name, task_type=task_type, task_desc=task_desc, apply_time=apply_time, task_applyer_name=task_applyer_name)
+        is_finished = 0
+        task = Task(task_name=task_name, task_type=task_type, task_desc=task_desc, apply_time=apply_time, task_applyer_name=task_applyer_name, is_finished=is_finished)
         task.save()
     else:
         task_form = TaskModelForm()
@@ -130,34 +155,36 @@ def task_edit(request):
         return render(request, 'tasks/task_edit.html', locals())
 
 
-@login_required()
-def task_search(request):
-    """
-       组列表
-       :param request:
-       :return:
-       """
-    header_title, sub_title, path1, path2 = "", "", "任务管理", "查询任务"
-    # return render_to_response('user/group_list.html', locals())
-    return render(request, 'tasks/task_detail.html', locals())
 
 @login_required()
-def task_sucess(request):
+def task_success(request):
     """
        审批通过任务
        :param request:
        :return:
        """
     # task_all = Task.objects.all()
-    if request.method == 'GET':
-        task_id = request.GET.get('id', None)
-        task = Task.objects.get(id=task_id)
-        # TODO:获取表单错误信息
-        # print(form.errors)
-        finish_time = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M')
-        task_approve_name = request.user.username
-        Task.objects.filter(id=task_id).update(finish_time=finish_time, task_approve_name=task_approve_name)
-        return render(request, 'tasks/task_edit.html', locals())
+    ret = {'Code': 0, 'Message': ''}
+    if request.method == 'POST':
+        # for key in request.POST:
+        #     print(key)
+        #     valuelist = request.POST.getlist(key)
+        #     print(valuelist)
+        ids = request.POST.getlist('ids[]')
+        for id in ids:
+            if Task.objects.get(id=id).is_finished == '1':
+                ret['code'] = 0
+                ret['message'] = '该任务已审批'
+                continue
+            else:
+                finish_time = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M')
+                task_approve_name = request.user.username
+                is_finished = 1
+                Task.objects.filter(id=id).update(finish_time=finish_time, task_approve_name=task_approve_name, is_finished=is_finished)
+                ret['code'] = 1
+                ret['message'] = '执行成功'
+    return HttpResponse(json.dumps(ret))
+
 
 @login_required()
 def task_refuse(request):
@@ -176,3 +203,25 @@ def task_refuse(request):
         task_approve_name = request.user.username
         Task.objects.filter(id=task_id).update(finish_time=finish_time, task_approve_name=task_approve_name)
         return render(request, 'tasks/task_edit.html', locals())
+
+@login_required()
+def task_myself(request):
+    """
+       组列表
+       :param request:
+       :return:
+       """
+    header_title, sub_title, path1, path2 = "", "", "任务管理", "我的申请"
+    task_all = Task.objects.all()
+    return render(request, 'tasks/task_myself.html', locals())
+
+@login_required()
+def task_todo(request):
+    """
+       组列表
+       :param request:
+       :return:
+       """
+    header_title, sub_title, path1, path2 = "", "", "任务管理", "待办任务"
+    task_all = Task.objects.all()
+    return render(request, 'tasks/task_todo.html', locals())
