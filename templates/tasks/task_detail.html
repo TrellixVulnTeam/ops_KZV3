@@ -1,0 +1,121 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">查看任务</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-chevron-up"></i>
+                        </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="panel-body">
+
+{#                    <ul class="nav nav-tabs">#}
+{#                        <li class="active"><a href="#home" data-toggle="tab"><i class="fa   fa-user"></i> a</a>#}
+{#                        </li>#}
+{#                        <li><a href="#profile" data-toggle="tab"><i class="fa   fa-group"></i>b</a>#}
+{#                        </li>#}
+{#                        <li><a href="#permisson" data-toggle="tab"><i class="fa   fa-eye"></i>c</a>#}
+{#                        </li>#}
+{#                    </ul>#}
+
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="home">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <br>
+                                    <div id="test">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th class="center">id</th>
+                                                <th class="center">任务名</th>
+                                                <th class="center">任务类型</th>
+                                                <th class="hidden-xs center">描述</th>
+                                                <th class="hidden-480 center">申请人</th>
+                                                <th class="center">审批人</th>
+                                                <th class="center">申请时间</th>
+                                                <th class="center">完成时间</th>
+                                                <th class="center">状态</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                {% for ds in task_all %}
+                                                <tr>
+                                                    {% if ds.is_finished %}
+                                                    <td>
+                                                        <label>
+                                                            <span class="lbl"></span>
+                                                                <a href="/user/{{ ds.id }}">
+                                                                    {{ ds.id }}
+                                                                </a>
+                                                        </label>
+                                                    </td>
+                                                        <td>
+                                                            {{ ds.task_name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ ds.task_type }}
+                                                        </td>
+                                                        <td >
+                                                            {{ ds.task_desc }}
+                                                        </td>
+                                                        <td>
+                                                            {{ ds.task_applyer_name }}
+
+                                                        </td>
+                                                        <td >
+                                                            {{ ds.task_approve_name }}
+
+                                                        </td>
+                                                        <td>
+                                                             {{ ds.apply_time }}
+                                                        </td>
+                                                        <td>
+                                                            {{ ds.finish_time }}
+                                                        </td>
+                                                        <td>
+                                                            完成
+                                                        </td>
+                                                {% endif %}
+                                                </tr>
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./box-body -->
+                <div class="box-footer">
+                    <div class="row">
+
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-footer -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- context menu -->
+{% endblock %}

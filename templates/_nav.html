@@ -1,0 +1,70 @@
+<!-- search form -->
+<!--
+<form action="#" method="get" class="sidebar-form">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search...">
+        <span class="input-group-btn">
+    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+    </button>
+  </span>
+    </div>
+</form>-->
+<!-- /.search form -->
+<!-- sidebar menu: : style can be found in sidebar.less -->
+<ul class="sidebar-menu">
+    <!--<li class="header">MAIN NAVIGATION</li>-->
+    <li class="treeview" id="index">
+        <a href="/">
+            <i class="fa fa-dashboard"></i> <span>总览</span>
+        </a>
+    </li>
+    <li class="treeview" id="users">
+        <a href="#">
+            <i class="fa fa-users"></i>
+            <span>用户管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="group"><a href="{% url 'user_group_list' %}"><i class="fa fa-circle-o"></i> 用户组</a></li>
+            <li class="user"><a href="{% url 'user_list' %}"><i class="fa fa-circle-o"></i> 用户</a></li>
+        </ul>
+    </li>
+
+
+
+    <li class="treeview" id="platform">
+        <a href="#">
+            <i class="fa fa-cloud"></i>
+            <span>任务系统</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="tasklist"><a href="{% url 'task' %}"><i class="fa fa-circle-o"></i> 任务管理</a></li>
+            <li class="taskadd"><a href="{% url 'task_add' %}"><i class="fa fa-circle-o"></i> 创建任务</a></li>
+            <li class="tasksearch"><a href="{% url 'task_search' %}"><i class="fa fa-circle-o"></i> 查询任务</a></li>
+            <li class="taskdetail"><a href="{% url 'task_detail' %}"><i class="fa fa-circle-o"></i> 测试专用</a></li>
+            <li class="taskmyself"><a href="{% url 'task_myself' %}"><i class="fa fa-circle-o"></i> 我的申请</a></li>
+            <li class="tasktodo"><a href="{% url 'task_todo' %}"><i class="fa fa-circle-o"></i> 待办任务</a></li>
+        </ul>
+    </li>
+
+
+    <li class="treeview" id="platform">
+        <a href="#">
+            <i class="fa fa-cloud"></i>
+            <span>数据库系统</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+{#        <ul class="treeview-menu">#}
+{#            <li class="tasklist"><a href="{% url 'task_list' %}"><i class="fa fa-circle-o"></i> 任务管理</a></li>#}
+{#            <li class="taskadd"><a href="{% url 'task_add' %}"><i class="fa fa-circle-o"></i> 创建任务</a></li>#}
+{#            <li class="tasksearch"><a href="{% url 'task_search' %}"><i class="fa fa-circle-o"></i> 查询任务</a></li>#}
+{#        </ul>#}
+    </li>
+</ul>

@@ -1,0 +1,73 @@
+{% load static %}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#  <head>#}
+{#    <meta charset="utf-8">#}
+{#    <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{% block fileupload %}
+    <link href="{% static 'css/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+    <style type="text/css">
+      .page-header {
+        margin-top: 0;
+      }
+    </style>
+{#  </head>#}
+{#  <body>#}
+    <div class="container">
+      <div style="margin-bottom: 20px;">
+            <button type="button" class="btn btn-primary js-upload-files">
+              <span class="glyphicon glyphicon-cloud-upload"></span> 选择文件
+            </button>
+            <input id="file-upload" type="file" name="file" multiple
+                   style="display: none;"
+                   data-url="{% url 'FileUpload' %}"
+                   data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+      </div>
+
+      <table id="gallery" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>文件</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for file in files %}
+            <tr>
+              <td><a href="{{ file.file.url }}">{{ file.file.name }}</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+
+  {# PHOTOS PAGE SCRIPTS #}
+  <script >
+      $(function () {
+
+      $(".js-upload-files").click(function () {
+        $("#file-upload").click();
+      });
+
+      $("#file-upload").fileupload({
+        dataType: 'json',
+        done: function (e, data) {
+          if (data.result.is_valid) {
+            $("#gallery tbody").prepend(
+              "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"
+            )
+          }
+        }
+      });
+
+    });
+  </script>
+{#  </body>#}
+{#</html>#}
+{% endblock %}
