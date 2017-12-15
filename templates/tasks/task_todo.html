@@ -56,6 +56,7 @@
 
                                             <tbody>
                                                 {% for ds in task_all %}
+                                                    {%  if ds.is_finished ==  '0'  %}
                                                 <tr>
                                                     <td>
                                                         <label>
@@ -89,13 +90,10 @@
                                                             {{ ds.finish_time }}
                                                         </td>
                                                         <td>
-                                                            {%  if ds.is_finished ==  '1'  %}
-                                                                完成
-                                                            {% else %}
                                                                 待审核
-                                                            {% endif %}
                                                         </td>
                                                 </tr>
+                                                    {% endif %}
                                                 {% endfor %}
 
                                             </tbody>

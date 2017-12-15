@@ -204,3 +204,5 @@ SESSION_COOKIE_AGE = 1200
 #     'django.contrib.auth.hashers.CryptPasswordHasher',
 # )
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

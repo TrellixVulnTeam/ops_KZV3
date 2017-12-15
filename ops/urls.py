@@ -17,7 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 from ops.views import *
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     url(r'^favicon\.ico$', RedirectView.as_view(url=r'static/images/favicon.ico')),
     url(r'^robots\.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
@@ -41,3 +42,5 @@ urlpatterns = [
     url(r'^users/', include('users.urls')),
     url(r'^tasks/', include('tasks.urls')),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

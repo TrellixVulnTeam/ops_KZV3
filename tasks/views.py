@@ -7,10 +7,33 @@ import datetime
 import io
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse
+from django.views import View
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
 from tasks.forms import *
 from ops.common import *
+from users.models import User
+def upload_file(request):
+    """
+    文件接收 view
+    :param request: 请求
+    :return:
+    """
+    if request.method == 'POST':
+        my_form = FileUploadForm(request.POST, request.FILES)
+        if my_form.is_valid():
+            f = my_form.cleaned_data['my_file']
+            handle_uploaded_file(f)
+        return HttpResponse('Upload Success')
+    else:
+        my_form = FileUploadForm()
+    return render(request, 'tasks/upload_temp.html', {'form': my_form})
+
+
+def handle_uploaded_file(f):
+    with open(f.name, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 @login_required()
 def task_list(request):
@@ -21,7 +44,24 @@ def task_list(request):
        """
     header_title, sub_title, path1, path2 = "", "", "任务系统", "任务管理"
     # return render_to_response('user/group_list.html', locals())
-    return render(request, 'tasks/task_list.html', locals())
+    login_user = request.user.username
+    user_list = User.objects.all()
+    for q in user_list:
+        if q.username == login_user:
+           if q.level == '1':
+              return render(request, 'tasks/task_list.html', locals())
+        return render(request, 'tasks/task_list_noapprove.html', locals())
+
+    # print(tmp_list)
+    # level_id = User.objects.filter(username=login_user).values('level')
+    # query = 'SELECT * FROM users_user WHERE username = %s' % login_user
+    # user_info = User.objects.raw('SELECT * FROM users_user WHERE username = %s', [login_user])[:4]
+    # level_id = user_info
+
+    # if level_id == 1:
+    #     return render(request, 'tasks/task_list.html', locals())
+    # else:
+    #     return render(request, 'tasks/task_list_noapprove.html', locals())
 
 @login_required()
 def task_search(request):
@@ -56,6 +96,8 @@ def get_tasklist(request):
     sort = request.GET.get('sort', None)
     keywords = request.GET.get('search', None)
 
+
+
     if sort is None:
         sort = "id"
 
@@ -65,9 +107,12 @@ def get_tasklist(request):
     count = Task.objects.all().count()
     # group_list = UserGroup.objects.all()[int(offset):int(offset + limit)]
     task_list = Task.objects.order_by(sort).all()[int(offset):int(offset + limit)]
-    if keywords:
-        task_list = Task.objects.order_by(sort).filter(
-            Q(name__icontains=keywords) | Q(comment__icontains=keywords))[int(offset):int(offset + limit)]
+
+    # if keywords:
+    #     task_list = Task.objects.order_by(sort).filter(
+    #         Q(name__icontains=keywords) | Q(comment__icontains=keywords))[int(offset):int(offset + limit)]
+    # for tasklist in task_list:
+    #     if tasklist.is_finished == '1':
     rows = [
         {
             'id': g.id,
@@ -107,11 +152,11 @@ def task_add(request):
         is_finished = 0
         task = Task(task_name=task_name, task_type=task_type, task_desc=task_desc, apply_time=apply_time, task_applyer_name=task_applyer_name, is_finished=is_finished)
         task.save()
+        return HttpResponseRedirect(reverse(task_list))
     else:
         task_form = TaskModelForm()
+        return render(request, 'tasks/task_add.html', locals())
 
-    return render(request, 'tasks/task_add.html', locals())
-    return HttpResponseRedirect(reverse(task_list))
 
 
 
@@ -225,3 +270,18 @@ def task_todo(request):
     header_title, sub_title, path1, path2 = "", "", "任务管理", "待办任务"
     task_all = Task.objects.all()
     return render(request, 'tasks/task_todo.html', locals())
+
+
+class FileUpload(View):
+    def get(self, request):
+        files_list = File.objects.all()
+        return render(self.request, 'tasks/upload.html', {'files': files_list})
+
+    def post(self, request):
+        form = FileForm(self.request.POST, self.request.FILES)
+        if form.is_valid():
+            file = form.save()
+            data = {'is_valid': True, 'name': file.file.name, 'url': file.file.url}
+        else:
+            data = {'is_valid': False}
+        return JsonResponse(data)

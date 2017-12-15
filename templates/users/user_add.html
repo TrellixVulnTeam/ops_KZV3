@@ -67,13 +67,36 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                <label for="role" class="col-sm-2 control-label">角色<span class="text-red">*</span>：</label>
+                                <div class="col-sm-8">
+{#                                    {% for m, role_name in role_level.items %}#}
+{#                                        <div class="col-sm-3">#}
+{#                                            <div class="radio i-checks">#}
+{#                                                <label><input type="radio" value="{{ m }}" class="role" name="role"#}
+{#                                                        {% ifequal m 'dev' %}checked{% endifequal %}>{{ role_name }}#}
+{#                                                </label>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {% endfor %}#}
+{#                                     {{ user_form.role }}#}
+                                    <select id="role" name="role" class="form-control m-b input-sm" >
+{#                                    {{ task_form.task_type }}#}
+                                    {% for role in roles_all %}
+                                            <option value="{{ role.id }}" > {{ role.name }}</option>
+
+                                    {% endfor %}
+                                 </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 <label for="role" class="col-sm-2 control-label">权限<span
-                                        class="red-fonts">*</span></label>
+                                        class="text-red">*</span>：</label>
                                 <div class="col-sm-10">
                                     {% for r, role_name in user_role.items %}
                                         <div class="col-sm-3">
                                             <div class="radio i-checks">
-                                                <label><input type="radio" value="{{ r }}" class="role" name="role"
+                                                <label><input type="radio" value="{{ r }}" class="right" name="right"
                                                               {% ifequal r 'CU' %}checked{% endifequal %}>{{ role_name }}
                                                 </label>
                                             </div>

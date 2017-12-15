@@ -1,6 +1,14 @@
 {% extends 'layout.html' %}
+
+{% load static %}
 {% load mytags %}
 {% block content %}
+    <link href="{% static 'css/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+    <style type="text/css">
+      .page-header {
+        margin-top: 0;
+      }
+    </style>
     <div class="row">
         <div class="col-sm-12">
             <div class="box">
@@ -47,26 +55,15 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                 <label class="control-label col-sm-2">上传文件：</label>
+                                {% include 'tasks/upload.html' %}
+                            </div>
+                            <div class="form-group">
                                   <label for="memo" class="col-sm-2 control-label">描述信息<span class="text-red">*</span>：</label>
                                   <div class="col-sm-8" >
                                      {{ task_form.task_desc }}
                                   </div>
                             </div>
-
-{#                            <div class="form-group">#}
-{#                                <label class="control-label col-sm-2">审批人：</label>#}
-{#                                <div class="col-sm-8">#}
-{#                                    <select id="groups" name="groups" class="form-control m-b" multiple size="8">#}
-{#                                        {% for group in group_all %}#}
-{#                                            {% if forloop.first %}#}
-{#                                                <option value="{{ group.id }}" selected>{{ group.name }}</option>#}
-{#                                            {% else %}#}
-{#                                                <option value="{{ group.id }}">{{ group.name }}</option>#}
-{#                                            {% endif %}#}
-{#                                        {% endfor %}#}
-{#                                    </select>#}
-{#                                </div>#}
-{#                            </div>#}
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
@@ -82,6 +79,32 @@
         </div>
     </div>
 {% endblock %}
+
+{#<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>#}
+{#<script src="{% static 'js/bootstrap.min.js' %}"></script>#}
+{#<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>#}
+{#<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>#}
+{#<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>#}
+{#<script >#}
+{#  $(function () {#}
+{##}
+{#      $(".js-upload-files").click(function () {#}
+{#        $("#file-upload").click();#}
+{#      });#}
+{##}
+{#      $("#file-upload").fileupload({#}
+{#        dataType: 'json',#}
+{#        done: function (e, data) {#}
+{#          if (data.result.is_valid) {#}
+{#            $("#gallery tbody").prepend(#}
+{#              "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"#}
+{#            )#}
+{#          }#}
+{#        }#}
+{#      });#}
+{##}
+{#});#}
+{#</script>#}
 
 {% block self_footer_js %}
     <script>

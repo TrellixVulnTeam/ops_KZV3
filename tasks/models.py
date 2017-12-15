@@ -26,9 +26,22 @@ class Task(models.Model):
     finish_time = models.CharField(u"完成时间", max_length=30, null=True)
     is_finished = models.CharField(u"完成时间", max_length=30, null=True)
 
+
     def __unicode__(self):
         return self.name
 
     class Meta:
         verbose_name = u'任务中心'
         verbose_name_plural = verbose_name
+class File(models.Model):
+    title = models.CharField(max_length=255, blank=True)
+    file = models.FileField(upload_to='%Y-%m-%d')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
+class FileSimpleModel(models.Model):
+    """
+    文件接收 Model
+    upload_to：表示文件保存位置
+    """
+    file_field = models.FileField(upload_to="upload/%Y-%m-%d")

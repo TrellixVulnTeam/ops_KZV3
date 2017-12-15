@@ -16,3 +16,13 @@ class TaskModelForm(forms.ModelForm):
             'task_applyer_name': forms.TextInput(attrs={'class': 'form-control'}),
             'task_approve_name': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+
+class FileForm(forms.ModelForm):
+    class Meta:
+        model = File
+        fields = ('file', )
+
+
+class FileUploadForm(forms.Form):
+    my_file = forms.FileField()
