@@ -10,12 +10,12 @@
 
 {% block content %}
 
-    <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="row">
         <div class="col-lg-10">
             <h2>文档添加</h2>
             <ol class="breadcrumb">
                 <li>
-                    <a href="/index.html">主页</a>
+                    <a href="/dashboard">主页</a>
                 </li>
                 <li>
                     <a href="library.html">文档列表</a>
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal" action="{% url "library:library_add" %}" method="post"
+                    <form class="form-horizontal" action="{% url "library_add" %}" method="post"
                           enctype="multipart/form-data">
                         {% csrf_token %}
                         {% if form.no_field_errors %}
