@@ -40,4 +40,6 @@ urlpatterns = [
     # 路由转发
     url(r'^users/', include('users.urls')),
     url(r'^tasks/', include('tasks.urls')),
+    url(r'^library/', include('library.urls')),
+    url(r'^mysql/', include('mysql.urls')),
 ]

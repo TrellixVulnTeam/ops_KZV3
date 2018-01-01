@@ -14,5 +14,8 @@ class TaskModelForm(forms.ModelForm):
             'task_type': forms.TextInput(attrs={'class': 'form-control'}),
             'task_desc': forms.TextInput(attrs={'class': 'form-control'}),
             'task_applyer_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'task_approve_name': forms.TextInput(attrs={'class': 'form-control'})
+            'task_approve_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'tool_script': forms.Textarea(
+
+            ),
         }
