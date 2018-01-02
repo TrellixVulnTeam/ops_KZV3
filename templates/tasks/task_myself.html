@@ -1,6 +1,4 @@
 {% extends 'layout.html' %}
-
-
 {% block content %}
     <div class="row">
         <div class="col-md-12">
@@ -80,17 +78,21 @@
 
                                                         </td>
                                                         <td >
-                                                            {{ ds.task_approve_name }}
+                                                            {{ ds.task_approve_name|default:"----"  }}
 
                                                         </td>
                                                         <td>
                                                              {{ ds.apply_time }}
                                                         </td>
                                                         <td>
-                                                            {{ ds.finish_time }}
+                                                            {{ ds.finish_time|default:"----"  }}
                                                         </td>
                                                         <td>
+                                                         {%  if ds.is_finished ==  '1'  %}
                                                             完成
+                                                         {% else %}
+                                                            待审核
+                                                         {% endif %}
                                                         </td>
                                                 {% endif %}
                                                 </tr>

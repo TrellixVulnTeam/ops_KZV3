@@ -18,6 +18,7 @@
             <i class="fa fa-dashboard"></i> <span>总览</span>
         </a>
     </li>
+    {% if request.user.username == "devops" %}
     <li class="treeview" id="users">
         <a href="#">
             <i class="fa fa-users"></i>
@@ -27,11 +28,13 @@
             </span>
         </a>
         <ul class="treeview-menu">
+            <li class="role"><a href="{% url 'role_list' %}"><i class="fa fa-circle-o"></i> 角色</a></li>
             <li class="group"><a href="{% url 'user_group_list' %}"><i class="fa fa-circle-o"></i> 用户组</a></li>
             <li class="user"><a href="{% url 'user_list' %}"><i class="fa fa-circle-o"></i> 用户</a></li>
+
         </ul>
     </li>
-
+    {% endif %}
 
 
     <li class="treeview" id="platform">
@@ -46,25 +49,77 @@
             <li class="tasklist"><a href="{% url 'task' %}"><i class="fa fa-circle-o"></i> 任务管理</a></li>
             <li class="taskadd"><a href="{% url 'task_add' %}"><i class="fa fa-circle-o"></i> 创建任务</a></li>
             <li class="tasksearch"><a href="{% url 'task_search' %}"><i class="fa fa-circle-o"></i> 查询任务</a></li>
-            <li class="taskdetail"><a href="{% url 'task_detail' %}"><i class="fa fa-circle-o"></i> 测试专用</a></li>
+{#            <li class="taskdetail"><a href="{% url 'task_detail' %}"><i class="fa fa-circle-o"></i> 测试专用</a></li>#}
             <li class="taskmyself"><a href="{% url 'task_myself' %}"><i class="fa fa-circle-o"></i> 我的申请</a></li>
             <li class="tasktodo"><a href="{% url 'task_todo' %}"><i class="fa fa-circle-o"></i> 待办任务</a></li>
         </ul>
     </li>
-
-
+{#    <li class="treeview" id="platform">#}
+{#        <a href="#">#}
+{#            <i class="fa fa-cloud"></i>#}
+{#            <span>工具系统</span>#}
+{#            <span class="pull-right-container">#}
+{#              <i class="fa fa-angle-left pull-right"></i>#}
+{#            </span>#}
+{#        </a>#}
+{#        <ul class="treeview-menu">#}
+{#            <li><a href={% url 'tools' %}>脚本工具</a></li>#}
+{#            <li><a href={% url 'maven_jar' %}>上传私服包</a></li>#}
+{#        </ul>#}
+{#    </li>#}
     <li class="treeview" id="platform">
         <a href="#">
-            <i class="fa fa-cloud"></i>
-            <span>数据库系统</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
+            <i class="fa fa-address-book-o"></i>
+            <span >脚本申请</span>
+            <span  class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
             </span>
         </a>
+        <ul class="treeview-menu">
+             <li  class="tools"><a href="{% url 'tools' %}"><i class="fa fa-circle-o"></i>脚本</a></li>
+
+        </ul>
+    </li>
+    <li class="treeview" id="platform">
+{#        <a href="#">#}
+{#            <i class="fa fa-cloud"></i>#}
+{#            <span>数据库系统</span>#}
+{#            <span class="pull-right-container">#}
+{#              <i class="fa fa-angle-left pull-right"></i>#}
+{#            </span>#}
+{#        </a>#}
+         <a href="#">
+             <i class="fa fa-y-combinator-square"></i>
+             <span class="nav-label">数据库系统</span>
+             <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+              </span>
+         </a>
+        <ul class="treeview-menu">
+{#            <li class="{{ library_list_active }}"><a href="{% url  'library_list' %}">sql文件列表</a></li>#}
+        </ul>
 {#        <ul class="treeview-menu">#}
 {#            <li class="tasklist"><a href="{% url 'task_list' %}"><i class="fa fa-circle-o"></i> 任务管理</a></li>#}
 {#            <li class="taskadd"><a href="{% url 'task_add' %}"><i class="fa fa-circle-o"></i> 创建任务</a></li>#}
 {#            <li class="tasksearch"><a href="{% url 'task_search' %}"><i class="fa fa-circle-o"></i> 查询任务</a></li>#}
 {#        </ul>#}
     </li>
+    <li class="{{ tasks_active }}">
+                <a href="#"><i class="fa fa-address-book-o"></i> <span class="nav-label">执行任务</span>
+                    <span  class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+                     <li  class="{{ tools_active }}"><a href="{% url 'tools' %}">工具</a></li>
+
+                </ul>
+            </li>
+
+{#    <li class="{{ library_active }}">#}
+{#        <a href="#"><i class="fa fa-y-combinator-square"></i> <span class="nav-label">技术文档</span>#}
+{#            <span  class="fa arrow"> </span></a>#}
+{#        <ul class="nav nav-second-level">#}
+{#             <li  class="{{ library_list_active }}"><a href="{% url 'library_list' %}">文档列表</a></li>#}
+{#        </ul>#}
+{#    </li>#}
+
+
 </ul>

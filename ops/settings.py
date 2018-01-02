@@ -1,3 +1,5 @@
+#/usr/src/python3
+# -*- coding: utf-8 -*-
 """
 Django settings for ops project.
 
@@ -62,6 +64,7 @@ AUTH_USER_MODEL = 'users.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap3',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -71,7 +74,8 @@ INSTALLED_APPS = [
     'ops',
     'users',
     'tasks',
-
+    'DjangoUeditor',
+    'mysql',
 ]
 
 MIDDLEWARE = [
@@ -206,3 +210,4 @@ SESSION_COOKIE_AGE = 1200
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

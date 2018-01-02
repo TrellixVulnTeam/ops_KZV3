@@ -9,8 +9,70 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
 from users.forms import *
 from ops.common import *
+from users.models import RoleList
+from users.forms import RoleListForm
+from django.contrib.auth import get_user_model
 
 # Create your views here.
+
+@login_required
+def role_add(request):
+    header_title, sub_title, path1, path2 = "", "", "用户管理", "角色添加"
+    temp_name = "accounts/accounts-header.html"
+    if request.method == "POST":
+        form = RoleListForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('role_list'))
+    else:
+        form = RoleListForm()
+
+    kwvars = {
+        'temp_name': temp_name,
+        'form': form,
+        'request': request,
+    }
+
+    return render(request, 'users/role_add.html', locals())
+
+
+@login_required
+def role_list(request):
+    header_title, sub_title, path1, path2 = "", "", "用户管理", "角色列表"
+    temp_name = "accounts/accounts-header.html"
+    all_role = RoleList.objects.all()
+    return render(request, 'users/role_list.html', locals())
+
+
+@login_required
+def role_edit(request, ids):
+    header_title, sub_title, path1, path2 = "", "", "用户管理", "角色编辑"
+    iRole = RoleList.objects.get(id=ids)
+    temp_name = "accounts/accounts-header.html"
+    if request.method == "POST":
+        form = RoleListForm(request.POST, instance=iRole)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('role_list'))
+    else:
+        form = RoleListForm(instance=iRole)
+
+    kwvars = {
+        'temp_name': temp_name,
+        'ids': ids,
+        'form': form,
+        'request': request,
+    }
+
+    return render(request, 'users/role_edit.html', locals())
+
+
+@login_required
+def role_del(request, ids):
+    RoleList.objects.filter(id=ids).delete()
+    return HttpResponseRedirect(reverse('role_list'))
+
+
 @login_required()
 def group_list(request):
     """
@@ -21,6 +83,7 @@ def group_list(request):
     header_title, sub_title, path1, path2 = "", "", "用户管理", "用户组列表"
     # return render_to_response('user/group_list.html', locals())
     return render(request, 'users/group_list.html', locals())
+
 
 
 @login_required()
@@ -178,13 +241,21 @@ def group_detail(request):
 def user_list(request):
     """
     用户列表
-    :param request: 
-    :return: 
+    :param request:
+    :return:
     """
     header_title, sub_title, path1, path2 = "", "", "用户", "用户列表"
     # return render_to_response('user/user_list.html', locals())
     return render(request, 'users/user_list.html', locals())
-
+# @login_required()
+# def user_list(request):
+#     header_title, sub_title, path1, path2 = "", "", "用户", "用户列表"
+#     all_user = get_user_model().objects.all()
+#     kwargs = {
+#         # 'temp_name': temp_name,
+#         'all_user':  all_user,
+#     }
+#     return render(request, 'users/user_list.html', locals())
 
 # 用户组转为字符串
 # def groups2str(group_list):
@@ -225,9 +296,10 @@ def get_userlist(request):
     if order == "desc":
         sort = "-username"
 
-    gid = request.GET.get('gid', None)
+    gid = request.GET.get('uid', None)
     if gid:
         user_group = UserGroup.objects.filter(id=gid)
+
         if user_group:
             print(user_group)
             user_group = user_group[0]
@@ -254,7 +326,7 @@ def get_userlist(request):
             'email': user.email,
             # 'group': groups2str(user.group.all()),
             'group': object2str(user.group.all()),
-            # 'role': u.role,
+            'role': user.role_id,
             'is_active': user.is_active,
         } for user in user_list]
     data = {'total': count, 'rows': rows}
@@ -288,9 +360,10 @@ def user_create(request):
     # # 多对多添加数据方式(2种方式)
     # r1.user_set.add(u1)
     # # u1.role_relation.add(r1)
-
+    # role_level = {'dev': u'开发工程师', 'test': u'测试工程师', 'ops': u'运维工程师', 'leader': u'组长'}
     user_role = {'SU': u'超级管理员', 'CU': u'普通用户'}
     group_all = UserGroup.objects.all()
+    roles_all = RoleList.objects.all()
 
     if request.method == 'POST':
         # username = request.POST.get('username', None)
@@ -307,15 +380,22 @@ def user_create(request):
         password = request.POST.get('password', '')
         email = request.POST.get('email', '')
         groups = request.POST.getlist('groups', [])
-        role = request.POST.get('role', 'CU')
+        right = request.POST.get('right', 'CU')
+        role_id = request.POST.get('role', '')
+        print(role_id)
         ssh_key_pwd = ''
         is_active = True
-
+        level = '0'
+        # role = ''.join(role)
         user = User(username=username, name=name, password=password, email=email, is_active=is_active,
-                    date_joined=datetime.datetime.now())
+                    date_joined=datetime.datetime.now(), role_id=role_id, level=level)
         user.set_password(password)
         user.save()
-
+        # if role:
+        #     roles_select = []
+        #     for role_id in role:
+        #         roles_select.extend(RoleList.objects.filter(id=role_id))
+        #     user.role = roles_select
         if groups:
             group_select = []
             for group_id in groups:
@@ -341,7 +421,7 @@ def user_edit(request):
     header_title, sub_title, path1, path2 = "", "", "用户", "编辑用户"
     user_id = request.GET.get('id', None)
     group_all = UserGroup.objects.all()
-
+    roles_all = RoleList.objects.all()
     if request.method == 'POST':
         form = UserModelForm(request.POST)
         # TODO:获取表单错误信息
@@ -354,8 +434,9 @@ def user_edit(request):
             password = request.POST.get('password', None)
             email = request.POST.get('email', None)
             groups = request.POST.getlist('groups', [])
+            role_id = request.POST.get('role', None)
             if user:
-                user.update(username=username, name=name, email=email)
+                user.update(username=username, name=name, email=email, role_id=role_id)
                 if password:
                     user_get = user[0]
                     user_get.set_password(password)
@@ -372,7 +453,7 @@ def user_edit(request):
         user = User.objects.get(id=user_id)
         user_form = UserModelForm(instance=user)
         groups_str = ' '.join([str(group.id) for group in user.group.all()])
-        rolelist = Role.objects.all()
+        rolelist = RoleList.objects.all()
         return render(request, 'users/user_edit.html', locals())
 
 

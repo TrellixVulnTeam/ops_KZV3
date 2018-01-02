@@ -41,6 +41,10 @@ urlpatterns = [
     # 路由转发
     url(r'^users/', include('users.urls')),
     url(r'^tasks/', include('tasks.urls')),
+    url(r'^mysql/', include('mysql.urls')),
+    # url(r'^library/', include('library.urls')),
+    # url(r'^tools/', include('tools.urls')),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

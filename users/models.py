@@ -4,10 +4,12 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class Role(models.Model):
+class RoleLevel(models.Model):
     name = models.CharField(max_length=30, verbose_name=u'角色')
-    comment = models.CharField(max_length=160, blank=True, null=True)
+    role_level = models.CharField(max_length=160, blank=True, null=True, verbose_name=u'角色等级')
 
+    def __unicode__(self):
+        return self.name
     class Meta:
         verbose_name_plural = u'角色表'
         # db_table = 't_role'
@@ -26,7 +28,13 @@ class UserGroup(models.Model):
         verbose_name_plural = u'用户组'
         # db_table = 't_usergroup'
 
+class RoleList(models.Model):
+    name = models.CharField(max_length=64)
+    # permission = models.ManyToManyField(PermissionList, null=True, blank=True)
 
+
+    def __unicode__(self):
+        return self.name
 # todo:扩展django user模型
 class User(AbstractUser):
     # id = models.AutoField(primary_key=True)
@@ -38,6 +46,9 @@ class User(AbstractUser):
     name = models.CharField(max_length=100, verbose_name='', null=True)
     avatar = models.CharField(max_length=255, verbose_name=u'头像', null=True, blank=True)
     group = models.ManyToManyField(UserGroup)
+    # role = models.ManyToManyField(Role)
+    level = models.CharField(max_length=100, verbose_name='', null=True)
+    role = models.ForeignKey(RoleList, null=True, blank=True)
 
     class Meta:
         managed = True

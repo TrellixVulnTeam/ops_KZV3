@@ -77,18 +77,14 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label for="role" class="col-sm-2 control-label">权限<span
-                                        class="red-fonts">*</span></label>
-                                <div class="col-sm-10">
-                                    {% for r, role_name in user_role.items %}
-                                        <div class="col-sm-3">
-                                            <div class="radio i-checks">
-                                                <label><input type="radio" value="{{ r }}" class="role" name="role"
-                                                              {% ifequal r 'CU' %}checked{% endifequal %}>{{ role_name }}
-                                                </label>
-                                            </div>
-                                        </div>
+                                <label for="role" class="col-sm-2 control-label">角色<span class="text-red">*</span>：</label>
+                                <div class="col-sm-8">
+                                    <select id="role" name="role" class="form-control m-b input-sm" >
+                                    {% for role in roles_all %}
+                                            <option value="{{ role.id }}" > {{ role.name }}</option>
+
                                     {% endfor %}
+                                 </select>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
