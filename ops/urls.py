@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^mysql/', include('mysql.urls')),
     # url(r'^library/', include('library.urls')),
     # url(r'^tools/', include('tools.urls')),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
