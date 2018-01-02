@@ -7,7 +7,7 @@ from django.db import models
 
 
 TASK_TYPE = (
-    (str(1), u"数据库"),
+    # (str(1), u"数据库"),
     (str(2), u"gitlab"),
     (str(3), u"申请发布"),
     (str(4), u"申请主机"),
@@ -18,7 +18,7 @@ TASK_TYPE = (
 class Task(models.Model):
     task_name = models.CharField(u"任务名称", max_length=30, null=True)
     task_type = models.CharField(u"任务类型", max_length=30, null=True)
-    task_desc = models.CharField(u"任务描述", max_length=100, null=True)
+    task_desc = models.CharField(u"任务描述", max_length=256, null=True)
     task_applyer_name = models.CharField(u"申请人", max_length=30, null=True)
     task_approve_name = models.CharField(u"审批人", max_length=30, null=True)
     task_executer = models.CharField(u"执行人", max_length=30, null=True)

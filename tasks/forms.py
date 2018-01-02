@@ -10,7 +10,7 @@ class TaskModelForm(forms.ModelForm):
         model = Task
         fields = ['task_name', "task_type", "task_desc", 'task_applyer_name', 'task_approve_name']
         widgets = {
-            'task_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Name'}),
+            'task_name': forms.TextInput(attrs={'class': 'form-control'}),
             'task_type': forms.TextInput(attrs={'class': 'form-control'}),
             'task_desc': forms.TextInput(attrs={'class': 'form-control'}),
             'task_applyer_name': forms.TextInput(attrs={'class': 'form-control'}),

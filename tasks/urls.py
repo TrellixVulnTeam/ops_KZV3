@@ -14,8 +14,9 @@ urlpatterns = [
     url(r'^task/detail/$', task_detail, name='task_detail'),
     url(r'^task/todo/$', task_todo, name='task_todo'),
     url(r'^task/myself/$', task_myself, name='task_myself'),
-    url(r'^task/add/fileupload/$', FileUpload.as_view(), name='FileUpload'),
-    url(r'^upload/$', upload_file, name='FileUploadForm'),
+    # url(r'^task/add/fileupload/$', FileUpload.as_view(), name='FileUpload'),
+    # url(r'^upload/$', upload_file, name='FileUploadForm'),
+    # url(r'^clear/$', clear_database, name='clear_database'),
 
 
 ]

@@ -1,3 +1,5 @@
+#/usr/src/python3
+# -*- coding: utf-8 -*-
 """
 Django settings for ops project.
 
@@ -71,6 +73,11 @@ INSTALLED_APPS = [
     'ops',
     'users',
     'tasks',
+    # 'library',
+    'DjangoUeditor',
+    'bootstrap3',
+    'tools',
+    'mysql',
 
 ]
 

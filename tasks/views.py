@@ -13,6 +13,8 @@ from django.db.models import Q
 from tasks.forms import *
 from ops.common import *
 from users.models import User
+
+
 def upload_file(request):
     """
     文件接收 view
@@ -52,16 +54,6 @@ def task_list(request):
               return render(request, 'tasks/task_list.html', locals())
         return render(request, 'tasks/task_list_noapprove.html', locals())
 
-    # print(tmp_list)
-    # level_id = User.objects.filter(username=login_user).values('level')
-    # query = 'SELECT * FROM users_user WHERE username = %s' % login_user
-    # user_info = User.objects.raw('SELECT * FROM users_user WHERE username = %s', [login_user])[:4]
-    # level_id = user_info
-
-    # if level_id == 1:
-    #     return render(request, 'tasks/task_list.html', locals())
-    # else:
-    #     return render(request, 'tasks/task_list_noapprove.html', locals())
 
 @login_required()
 def task_search(request):
@@ -272,16 +264,26 @@ def task_todo(request):
     return render(request, 'tasks/task_todo.html', locals())
 
 
-class FileUpload(View):
-    def get(self, request):
-        files_list = File.objects.all()
-        return render(self.request, 'tasks/upload.html', {'files': files_list})
+# class FileUpload(View):
+#     def get(self, request):
+#         files_list = File.objects.all()
+#         return render(self.request, 'tasks/upload.html', {'files': files_list})
+#
+#     def post(self, request):
+#         form = FileForm(self.request.POST, self.request.FILES)
+#         if form.is_valid():
+#             file = form.save()
+#             data = {'is_valid': True, 'name': file.file.name, 'url': file.file.url}
+#         else:
+#             data = {'is_valid': False}
+#         return JsonResponse(data)
 
-    def post(self, request):
-        form = FileForm(self.request.POST, self.request.FILES)
-        if form.is_valid():
-            file = form.save()
-            data = {'is_valid': True, 'name': file.file.name, 'url': file.file.url}
-        else:
-            data = {'is_valid': False}
-        return JsonResponse(data)
+
+#
+# def clear_database(request,ids):
+#     files_all = File.objects.all()
+#     for f in files_all:
+#         File.objects.filter(id=ids).delete()
+#         f.file.delete()
+#         f.delete()
+#     return  HttpResponseRedirect(reverse(task_add))
