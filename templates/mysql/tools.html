@@ -68,8 +68,8 @@
                                             <td><input  type="checkbox"   value="{{ row.id }}"   name="id"></td>
 
                                             <td class="center">{{ row.name }}</td>
-                                            <td class="center">{% ifequal  row.env_type  0 %} dev{% endifequal  %} {% ifequal  row.env_type  1 %} test {% endifequal  %}  {% ifequal row.env_type  2 %}  stable {%  endifequal%}
-                                            {% ifequal row.env_type  3 %}  pre {%  endifequal%} {% ifequal row.env_type  4 %}  prod {%  endifequal%}</td>
+                                            <td class="center">{% ifequal  row.envr_type  0 %} dev{% endifequal  %} {% ifequal  row.envr_type  1 %} test {% endifequal  %}  {% ifequal row.envr_type  2 %}  stable {%  endifequal%}
+                                            {% ifequal row.envr_type  3 %}  pre {%  endifequal%} {% ifequal row.envr_type  4 %}  prod {%  endifequal%}</td>
 
                                             <td class="center">{% ifequal  row.tool_run_type  0 %} shell{% endifequal  %} {% ifequal  row.tool_run_type  1 %} python {% endifequal  %}  {% ifequal row.tool_run_type  2 %}  sql {%  endifequal%}  </td>
                                             <td class="center">{{ row.comment }}</td>

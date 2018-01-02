@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import toolsscript
+from .models import script
 import json
 from .form import ToolForm
 
@@ -11,7 +11,7 @@ from .form import ToolForm
 
 @login_required
 def tools(request):
-    obj = toolsscript.objects.all()
+    obj = script.objects.all()
     return render(request, "mysql/tools.html",
                   {"tools": obj, "tasks_active": "active", "tools_active": "active"})
 
@@ -35,7 +35,7 @@ def tools_add(request):
 
 @login_required
 def tools_update(request, nid):
-    tool_id = get_object_or_404(toolsscript, id=nid)
+    tool_id = get_object_or_404(script, id=nid)
 
     if request.method == 'POST':
         form = ToolForm(request.POST, instance=tool_id)
@@ -54,7 +54,7 @@ def tools_delete(request):
     if request.method == "POST":
         try:
             id_1 = request.POST.get("nid", None)
-            toolsscript.objects.get(id=id_1).delete()
+            script.objects.get(id=id_1).delete()
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误,{}'.format(e)
@@ -68,7 +68,7 @@ def tools_bulk_delte(request):
         try:
             ids = request.POST.getlist('id', None)
             idstring = ','.join(ids)
-            toolsscript.objects.extra(where=['id IN (' + idstring + ')']).delete()
+            script.objects.extra(where=['id IN (' + idstring + ')']).delete()
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误,{}'.format(e)

@@ -75,8 +75,6 @@ INSTALLED_APPS = [
     'users',
     'tasks',
     'DjangoUeditor',
-    'bootstrap3',
-    'tools',
     'mysql',
 ]
 
@@ -129,7 +127,7 @@ if config.get('db', 'engine') == 'mysql':
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'ops',
             'USER': 'root',
-            'PASSWORD': 'devops',
+            'PASSWORD': '',
             'HOST': '127.0.0.1',
             'PORT': '3306',
             # 'OPTIONS': {
@@ -209,11 +207,7 @@ SESSION_COOKIE_AGE = 1200
 #     'django.contrib.auth.hashers.SHA1PasswordHasher',
 #     'django.contrib.auth.hashers.CryptPasswordHasher',
 # )
-<<<<<<< HEAD
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-=======
-MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
-MEDIA_URL = '/upload/'
->>>>>>> 863605f36a804274c50df5f9d59dee8195cd690f
+

@@ -1,9 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from  .models import history,toolsscript
+from .models import script
 
-
-
-admin.site.register(history)
-admin.site.register(toolsscript)
+admin.site.register(script)

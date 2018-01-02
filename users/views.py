@@ -296,10 +296,10 @@ def get_userlist(request):
     if order == "desc":
         sort = "-username"
 
-    gid = request.GET.get('gid', None)
+    gid = request.GET.get('uid', None)
     if gid:
         user_group = UserGroup.objects.filter(id=gid)
-        roles_list = RoleList.objects.filter(id=gid)
+
         if user_group:
             print(user_group)
             user_group = user_group[0]
@@ -326,7 +326,7 @@ def get_userlist(request):
             'email': user.email,
             # 'group': groups2str(user.group.all()),
             'group': object2str(user.group.all()),
-            'role': user.role.name,
+            'role': user.role_id,
             'is_active': user.is_active,
         } for user in user_list]
     data = {'total': count, 'rows': rows}
