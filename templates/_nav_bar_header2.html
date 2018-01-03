@@ -26,17 +26,11 @@
             </li>
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                <a href="#dropdown-menu" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">
                     <img src="/static/images/user2-160x160.jpg" class="user-image" alt="User Image">
-
-                </a>
-                <a>
                     {{ request.user.username }}
-{#                    {{ request.user.email }}#}
-{#                    {{ session_user_id  }}#}
-                    </a>
-
-                <ul class="dropdown-menu" style="width:100px;">
+                </a>
+                <ul id="dropdown-menu" class="dropdown-menu" style="width:100px;">
                     <li>
                         <a href="{% url 'user_profile' %}" data-permalink="" style="height: 40px;
     line-height: 40px;padding: 3px 10px;">

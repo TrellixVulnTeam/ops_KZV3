@@ -200,8 +200,6 @@
                 </a>
                 <p>
                     {{ request.user.username }}
-                    {{ request.user.email }}
-                    {{ session_user_id  }}
                 </p>
                 <ul class="dropdown-menu" style="width:100px;">
                     <!-- User image
@@ -209,7 +207,7 @@
                         <img src="/static/images/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                         <p>
-                            {{ session_user_id  }} - supseruser
+{#                            {{ session_user_id  }} - supseruser#}
                             <small>Member since Nov. 2012</small>
                         </p>
                     </li>-->
