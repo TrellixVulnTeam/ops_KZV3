@@ -106,9 +106,12 @@
     </li>
     <li class="{{ tasks_active }}">
                 <a href="#"><i class="fa fa-address-book-o"></i> <span class="nav-label">执行任务</span>
-                    <span  class="fa arrow"> </span></a>
-                <ul class="nav nav-second-level">
-                     <li  class="{{ tools_active }}"><a href="{% url 'tools' %}">工具</a></li>
+                <span class="pull-right-container"> </span>
+                <i class="fa fa-angle-left pull-right"> </i>
+                    <span  class="fa arrow"> </span>
+                </a>
+                <ul class="treeview-menu">
+                     <li  class="{{ tools_active }}"><a href="{% url 'tools' %}"><i class="fa fa-circle-o"></i>工具</a></li>
 
                 </ul>
             </li>
