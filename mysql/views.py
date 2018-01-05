@@ -61,24 +61,43 @@ def tools_delete(request):
         return HttpResponse(json.dumps(ret))
 
 
-@login_required
-def tools_bulk_delte(request):
-    ret = {'status': True, 'error': None, }
-    if request.method == "POST":
-        try:
-            ids = request.POST.getlist('id', None)
-            idstring = ','.join(ids)
-            script.objects.extra(where=['id IN (' + idstring + ')']).delete()
-        except Exception as e:
-            ret['status'] = False
-            ret['error'] = '删除请求错误,{}'.format(e)
-        return HttpResponse(json.dumps(ret))
+# @login_required
+# def tools_bulk_delte(request):
+#     ret = {'status': True, 'error': None, }
+#     if request.method == "POST":
+#         try:
+#             ids = request.POST.getlist('id', None)
+#             idstring = ','.join(ids)
+#             script.objects.extra(where=['id IN (' + idstring + ')']).delete()
+#         except Exception as e:
+#             ret['status'] = False
+#             ret['error'] = '删除请求错误,{}'.format(e)
+#         return HttpResponse(json.dumps(ret))
 
 
 
-
-
-
+@login_required()
+def scripts_success(request):
+    """
+       审批通过任务
+       :param request:
+       :return:
+       """
+    # task_all = Task.objects.all()
+    ret = {'Code': 0, 'Message': ''}
+    if request.method == 'POST':
+        ids = request.POST.get("nid", None)
+        for id in ids:
+            if script.objects.get(id=id).is_finished == '1':
+                ret['status'] = 0
+                ret['message'] = '该任务已审批'
+                continue
+            else:
+                is_finished = 1
+                script.objects.filter(id=id).update( is_finished=is_finished)
+                ret['status'] = 1
+                ret['message'] = '执行成功'
+    return HttpResponse(json.dumps(ret))
 
 
 

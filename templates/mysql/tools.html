@@ -57,6 +57,7 @@
                                         <th>脚本类型</th>
                                         <th>说明</th>
                                         <th>更新时间</th>
+                                        <th>状态</th>
                                         <th>动作{{ error_performance }}</th>
                                     </tr>
                                     </thead>
@@ -74,14 +75,19 @@
                                             <td class="center">{% ifequal  row.tool_run_type  0 %} shell{% endifequal  %} {% ifequal  row.tool_run_type  1 %} python {% endifequal  %}  {% ifequal row.tool_run_type  2 %}  sql {%  endifequal%}  </td>
                                             <td class="center">{{ row.comment }}</td>
                                             <td class="center">{{ row.utime }}</td>
+                                            <td class="center">{% ifequal row.is_finished 0 %} <div style="color:red;">未执行</div> {% endifequal  %} {% ifequal row.is_finished 1 %} <div style="color:blue;">已执行</div> {% endifequal  %}</td>
 
                                             <td>
 
                                                 <a class="btn btn-primary  btn-xs "
                                                    href="{% url  'tools_update'  row.id   %}">编辑</a>
-                                                <a class="btn btn-danger  btn-xs  tools_del_id"     data-toggle="modal"
-                                                        data-target="#myModal1">执行
-                                                </a>
+
+                                                <button type="button" class="btn btn-danger  btn-xs  scripts_success" data-toggle="modal"
+                                                        data-target="#myModalscript">完成
+                                                </button>
+                                                <button type="button" class="btn btn-danger  btn-xs  tools_del_id" data-toggle="modal"
+                                                        data-target="#myModal1">删除
+                                                </button>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -127,26 +133,26 @@
         </div>
     </div>
 
-
-    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal inmodal" id="myModalscript" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content animated fadeIn">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span
                             aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <i class="fa fa-clock-o modal-icon"></i>
-                    <h4 class="modal-title">批量删除</h4>
-                    <span id="error_all" style="color:red;"></span>
+                    <h4 class="modal-title">执行</h4>
+                    <span id="error" style="color:red;"></span>
                     <small></small>
                 </div>
-                <form id="del_form">
+                <form id="script_form">
                     <div class="modal-body">
 
-                        <p><strong>确定删除？</strong></p>
+                        <div class="form-group"><input type="text" name="nid" style="display: none;" /></div>
+                        <p><strong>确定执行？</strong></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                        <a class="btn btn-danger m-r-sm  asset_all_del"> 批量删除</a>
+                        <a class="btn btn-danger m-r-sm scripts_approve">确定</a>
                     </div>
                 </form>
             </div>
@@ -154,15 +160,50 @@
     </div>
 
 
+
+
+
+{#    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">#}
+{#        <div class="modal-dialog">#}
+{#            <div class="modal-content animated fadeIn">#}
+{#                <div class="modal-header">#}
+{#                    <button type="button" class="close" data-dismiss="modal"><span#}
+{#                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>#}
+{#                    <i class="fa fa-clock-o modal-icon"></i>#}
+{#                    <h4 class="modal-title">批量删除</h4>#}
+{#                    <span id="error_all" style="color:red;"></span>#}
+{#                    <small></small>#}
+{#                </div>#}
+{#                <form id="del_form">#}
+{#                    <div class="modal-body">#}
+{##}
+{#                        <p><strong>确定删除？</strong></p>#}
+{#                    </div>#}
+{#                    <div class="modal-footer">#}
+{#                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>#}
+{#                        <a class="btn btn-danger m-r-sm  asset_all_del"> 批量删除</a>#}
+{#                    </div>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+
     {% block footer-js %}
+    <script src="/static/js/jquery-2.2.3.min.js"></script>
 
 
         <script>
             $(function () {
-
                 $('.tools_del_id').click(function () {
                     var   id = $(this).parent().parent().attr('id');
                     $('#tools_del_form').find('input[name="nid"]').val(id);
+
+
+                });
+                  $('.scripts_success').click(function () {
+                    var   id = $(this).parent().parent().attr('id');
+                    $('#script_form').find('input[name="nid"]').val(id);
 
 
                 });
@@ -176,28 +217,45 @@
                             if (obj.status) {
                                 location.reload()
                             } else {
+                                $('#error').text(obj.message);
+                            }
+                        }
+                    })
+                });
+                 $('.scripts_approve').click(function () {
+                    $.ajax({
+                        url: "{% url 'scripts_success' %}",
+                        type: 'POST',
+                        data: $('#script_form').serialize(),
+                        success: function (data) {
+                            console.log(data)
+                            var obj = JSON.parse(data);
+                            console.log(obj)
+                            if (obj.status) {
+                                location.reload()
+                            } else {
                                 $('#error').text(obj.error);
                             }
                         }
                     })
                 });
 
-                $('.asset_all_del').click(function () {
-                    $.ajax({
-                        url: "/mysql/tools-bulk-del.html",
-                        type: 'POST',
-                        data: $('#del_form_tools_bulk').serialize(),
-                        success: function (data) {
-                            var obj = JSON.parse(data);
-                            if (obj.status) {
-                                location.reload()
-                            } else {
-                                $('#error_all').text(obj.error);
-                            }
-                        }
-
-                    })
-                });
+{#                $('.asset_all_del').click(function () {#}
+{#                    $.ajax({#}
+{#                        url: "/mysql/tools-bulk-del.html",#}
+{#                        type: 'POST',#}
+{#                        data: $('#del_form_tools_bulk').serialize(),#}
+{#                        success: function (data) {#}
+{#                            var obj = JSON.parse(data);#}
+{#                            if (obj.status) {#}
+{#                                location.reload()#}
+{#                            } else {#}
+{#                                $('#error_all').text(obj.error);#}
+{#                            }#}
+{#                        }#}
+{##}
+{#                    })#}
+{#                });#}
 
 
             });
