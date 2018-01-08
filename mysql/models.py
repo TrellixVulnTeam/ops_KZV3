@@ -24,7 +24,8 @@ class script(models.Model):
     comment = models.TextField(verbose_name='说明', null=True, blank=True)
     ctime = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     utime = models.DateTimeField(auto_now=True, verbose_name='更新时间')
-    is_finished = models.IntegerField(choices=FINISHED_STATE, verbose_name='完成时间', max_length=30,  default=0)
+    is_finished = models.IntegerField(choices=FINISHED_STATE, verbose_name='完成时间', default=0)
+    # task_applyer_name = models.CharField(u"申请人", max_length=30, null=True)
 
     def __str__(self):
         return self.name

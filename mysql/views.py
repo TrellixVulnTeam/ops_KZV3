@@ -84,19 +84,17 @@ def scripts_success(request):
        :return:
        """
     # task_all = Task.objects.all()
-    ret = {'Code': 0, 'Message': ''}
+    ret = {'status': '', 'Message': ''}
     if request.method == 'POST':
         ids = request.POST.get("nid", None)
-        for id in ids:
-            if script.objects.get(id=id).is_finished == '1':
-                ret['status'] = 0
-                ret['message'] = '该任务已审批'
-                continue
-            else:
-                is_finished = 1
-                script.objects.filter(id=id).update( is_finished=is_finished)
-                ret['status'] = 1
-                ret['message'] = '执行成功'
+        if script.objects.get(id=ids).is_finished == '1':
+            ret['status'] = 0
+            ret['message'] = '该任务已审批'
+        else:
+            is_finished = 1
+            script.objects.filter(id=ids).update( is_finished=is_finished)
+            ret['status'] = 1
+            ret['message'] = '执行成功'
     return HttpResponse(json.dumps(ret))
 
 
