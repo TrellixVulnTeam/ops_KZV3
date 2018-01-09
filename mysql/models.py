@@ -1,6 +1,9 @@
 from django.db import models
 
 class script(models.Model):
+    """
+    status:0 正常 1 删除
+    """
     TOOL_RUN_TYPE = (
         # (0, 'shell'),
         # (1, 'python'),
@@ -26,6 +29,7 @@ class script(models.Model):
     utime = models.DateTimeField(auto_now=True, verbose_name='更新时间')
     is_finished = models.IntegerField(choices=FINISHED_STATE, verbose_name='完成时间', default=0)
     applyer_name = models.CharField(verbose_name='申请人', max_length=30, blank=True)
+    status = models.IntegerField(verbose_name='状态', default=0)
 
     def __str__(self):
         return self.name

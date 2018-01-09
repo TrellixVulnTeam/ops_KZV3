@@ -63,8 +63,10 @@ def tools_delete(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
         try:
+            status = '1'
             id_1 = request.POST.get("nid", None)
-            script.objects.get(id=id_1).delete()
+            # script.objects.get(id=id_1).delete()
+            script.objects.filter(id=id_1).update(status=status)
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误,{}'.format(e)
