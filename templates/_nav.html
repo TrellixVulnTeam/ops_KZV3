@@ -77,6 +77,31 @@
         </a>
         <ul class="treeview-menu">
              <li  class="tools"><a href="{% url 'tools' %}"><i class="fa fa-circle-o"></i>脚本</a></li>
+            {% if request.user.username == "devops" %}
+             <li  class="tools"><a href="{% url 'tools_todo' %}"><i class="fa fa-circle-o"></i>待执行脚本</a></li>
+             <li  class="tools"><a href="{% url 'tools_done' %}"><i class="fa fa-circle-o"></i>已执行脚本</a></li>
+            {% endif %}
+
+
+
+
+        </ul>
+    </li>
+    <li class="treeview" id="platform">
+        <a href="#">
+            <i class="fa fa-address-book-o"></i>
+            <span >版本发布</span>
+            <span  class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+             <li  class="tools"><a href="#"><i class="fa fa-circle-o"></i>sit部署</a></li>
+             <li  class="tools"><a href="#"><i class="fa fa-circle-o"></i>预发部署</a></li>
+             <li  class="tools"><a href="#"><i class="fa fa-circle-o"></i>线上部署</a></li>
+
+
+
 
         </ul>
     </li>

@@ -58,37 +58,30 @@
                                         <th>说明</th>
                                         <th>更新时间</th>
                                         <th>状态</th>
-                                        <th>动作{{ error_performance }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
 
                                     {% for   row   in   tools %}
                                         {% if row.status == 0 %}
-                                            {% if row.is_finished == '0' %}
+                                            {% if row.is_finished == '1' %}
 
                                             <tr class="gradeA" id="{{ row.id }}">
-                                                <td><input  type="checkbox"   value="{{ row.id }}"   name="id"></td>
+{#                                                <td><input  type="checkbox"   value="{{ row.id }}"   name="id"></td>#}
+
+                                                <td class="center">{{ row.id }}</td>
                                                 <td class="center">{{ row.name }}</td>
                                                 <td class="center">{% ifequal  row.envr_type  0 %} dev{% endifequal  %} {% ifequal  row.envr_type  1 %} test {% endifequal  %}  {% ifequal row.envr_type  2 %}  stable {%  endifequal%}
                                                 {% ifequal row.envr_type  3 %}  pre {%  endifequal%} {% ifequal row.envr_type  4 %}  prod {%  endifequal%}</td>
-                                                <td class="center">{% ifequal  row.tool_run_type  0 %} shell{% endifequal  %} {% ifequal  row.tool_run_type  1 %} python {% endifequal  %}  {% ifequal row.tool_run_type  2 %}  sql {%  endifequal%}  </td>
+
+                                                <td class="center">  sql </td>
                                                 <td class="center">{{ row.comment }}</td>
                                                 <td class="center">{{ row.utime }}</td>
-                                                <td class="center"> <div style="color:red;">未执行</div></td>
-                                                <td>
-                                                    <a class="btn btn-primary  btn-xs "
-                                                       href="{% url  'tools_update'  row.id   %}">查看</a>
+                                                <td class="center"> <div style="color:blue;">已执行</div></td>
 
-    {#                                                <button type="button" class="btn btn-danger  btn-xs  scripts_success" data-toggle="modal"#}
-    {#                                                        data-target="#myModalscript">完成#}
-    {#                                                </button>#}
-    {#                                                <button type="button" class="btn btn-danger  btn-xs  tools_del_id" data-toggle="modal"#}
-    {#                                                        data-target="#myModal1">删除#}
-    {#                                                </button>#}
-                                                </td>
                                             </tr>
-                                            {% endif %}
+
+                                        {% endif %}
                                         {% endif %}
                                     {% endfor %}
 

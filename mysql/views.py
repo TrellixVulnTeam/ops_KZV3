@@ -110,6 +110,33 @@ def scripts_success(request):
     return HttpResponse(json.dumps(ret))
 
 
+@login_required
+def tools_todo(request):
+    obj = script.objects.all()
+    user_list = User.objects.all()
+    for q in user_list:
+        login_user = request.user.username
+        if q.username == login_user:
+            if q.level == '1':
+                return render(request, "mysql/tools_todo.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
+        else:
+                return render(request, "mysql/tools-normal.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
+
+@login_required
+def tools_done(request):
+    obj = script.objects.all()
+    user_list = User.objects.all()
+    for q in user_list:
+        login_user = request.user.username
+        if q.username == login_user:
+            if q.level == '1':
+                return render(request, "mysql/tools_done.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
+        else:
+                return render(request, "mysql/tools-normal.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
 
 
 
