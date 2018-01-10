@@ -56,43 +56,45 @@
 
                                             <tbody>
                                                 {% for ds in task_all %}
-                                                    {%  if ds.is_finished ==  '0'  %}
-                                                <tr>
-                                                    <td>
-                                                        <label>
-                                                            <span class="lbl"></span>
-                                                                <a href="{% url 'task_edit' %}?id=" + ds.id>
-                                                                    {{ ds.id }}
-                                                                </a>
-                                                        </label>
-                                                    </td>
+                                                    {% if ds.task_applyer_name == request.user.username %}
+                                                        {%  if ds.is_finished ==  '0'  %}
+                                                    <tr>
                                                         <td>
-                                                            {{ ds.task_name }}
+                                                            <label>
+                                                                <span class="lbl"></span>
+                                                                    <a href="{% url 'task_edit' %}?id=" + ds.id>
+                                                                        {{ ds.id }}
+                                                                    </a>
+                                                            </label>
                                                         </td>
-                                                        <td>
-                                                            {{ ds.task_type }}
-                                                        </td>
-                                                        <td >
-                                                            {{ ds.task_desc }}
-                                                        </td>
-                                                        <td>
-                                                            {{ ds.task_applyer_name }}
+                                                            <td>
+                                                                {{ ds.task_name }}
+                                                            </td>
+                                                            <td>
+                                                                {{ ds.task_type }}
+                                                            </td>
+                                                            <td >
+                                                                {{ ds.task_desc }}
+                                                            </td>
+                                                            <td>
+                                                                {{ ds.task_applyer_name }}
 
-                                                        </td>
-                                                        <td >
-                                                            {{ ds.task_approve_name }}
+                                                            </td>
+                                                            <td >
+                                                                {{ ds.task_approve_name }}
 
-                                                        </td>
-                                                        <td>
-                                                             {{ ds.apply_time }}
-                                                        </td>
-                                                        <td>
-                                                            {{ ds.finish_time }}
-                                                        </td>
-                                                        <td>
-                                                                待审核
-                                                        </td>
-                                                </tr>
+                                                            </td>
+                                                            <td>
+                                                                 {{ ds.apply_time }}
+                                                            </td>
+                                                            <td>
+                                                                {{ ds.finish_time }}
+                                                            </td>
+                                                            <td>
+                                                                    待审核
+                                                            </td>
+                                                    </tr>
+                                                        {% endif %}
                                                     {% endif %}
                                                 {% endfor %}
 

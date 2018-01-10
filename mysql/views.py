@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import script
 import json
 from .form import ToolForm
-
+from users.models import User
 
 
 
@@ -12,9 +12,16 @@ from .form import ToolForm
 @login_required
 def tools(request):
     obj = script.objects.all()
-    return render(request, "mysql/tools.html",
-                  {"tools": obj, "tasks_active": "active", "tools_active": "active"})
-
+    user_list = User.objects.all()
+    for q in user_list:
+        login_user = request.user.username
+        if q.username == login_user:
+            if q.level == '1':
+                return render(request, "mysql/tools.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
+        else:
+                return render(request, "mysql/tools-normal.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
 
 @login_required
 def tools_add(request):
@@ -23,6 +30,9 @@ def tools_add(request):
         if form.is_valid():
             user = request.user.username
             tools_save = form.save()
+            # applyer_name = request.user.username
+            # Script = script(applyer_name=applyer_name)
+            # Script.save()
             form = ToolForm()
             return render(request, 'mysql/tools-add.html',
                           {'form': form, "tasks_active": "active", "tools_active": "active",
@@ -53,8 +63,10 @@ def tools_delete(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
         try:
+            status = '1'
             id_1 = request.POST.get("nid", None)
-            script.objects.get(id=id_1).delete()
+            # script.objects.get(id=id_1).delete()
+            script.objects.filter(id=id_1).update(status=status)
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误,{}'.format(e)
@@ -84,22 +96,47 @@ def scripts_success(request):
        :return:
        """
     # task_all = Task.objects.all()
-    ret = {'Code': 0, 'Message': ''}
+    ret = {'status': '', 'Message': ''}
     if request.method == 'POST':
         ids = request.POST.get("nid", None)
-        for id in ids:
-            if script.objects.get(id=id).is_finished == '1':
-                ret['status'] = 0
-                ret['message'] = '该任务已审批'
-                continue
-            else:
-                is_finished = 1
-                script.objects.filter(id=id).update( is_finished=is_finished)
-                ret['status'] = 1
-                ret['message'] = '执行成功'
+        if script.objects.get(id=ids).is_finished == '1':
+            ret['status'] = 0
+            ret['message'] = '该任务已审批'
+        else:
+            is_finished = 1
+            script.objects.filter(id=ids).update(is_finished=is_finished)
+            ret['status'] = 1
+            ret['message'] = '执行成功'
     return HttpResponse(json.dumps(ret))
 
 
+@login_required
+def tools_todo(request):
+    obj = script.objects.all()
+    user_list = User.objects.all()
+    for q in user_list:
+        login_user = request.user.username
+        if q.username == login_user:
+            if q.level == '1':
+                return render(request, "mysql/tools_todo.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
+        else:
+                return render(request, "mysql/tools-normal.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
+
+@login_required
+def tools_done(request):
+    obj = script.objects.all()
+    user_list = User.objects.all()
+    for q in user_list:
+        login_user = request.user.username
+        if q.username == login_user:
+            if q.level == '1':
+                return render(request, "mysql/tools_done.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
+        else:
+                return render(request, "mysql/tools-normal.html",
+                              {"tools": obj, "tasks_active": "active", "tools_active": "active"})
 
 
 

@@ -18,7 +18,7 @@
                     <a>脚本</a>
                 </li>
                 <li class="active">
-                    <strong>脚本</strong>
+                    <strong>待执行脚本</strong>
                 </li>
             </ol>
         </div>
@@ -34,8 +34,8 @@
 
                           <div class="table-responsive">
 
-                            <a href="{% url 'tools_add' %}" class="btn btn-primary  ">
-                                添加</a>
+{#                            <a href="{% url 'tools_add' %}" class="btn btn-primary  ">#}
+{#                                添加</a>#}
 
 {#                            <a class="btn btn-danger" data-toggle="modal"#}
 {#                               data-target="#myModal2">批量删除#}
@@ -58,7 +58,7 @@
                                         <th>说明</th>
                                         <th>更新时间</th>
                                         <th>状态</th>
-                                        <th>动作{{ error_performance }}</th>
+{#                                        <th>动作{{ error_performance }}</th>#}
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -66,35 +66,21 @@
                                     {% for   row   in   tools %}
                                         {% if row.status == 0 %}
                                             {% if row.is_finished == '0' %}
-                                            <tr class="gradeA" id="{{ row.id }}">
-{#                                                <td><input  type="checkbox"   value="{{ row.id }}"   name="id"></td>#}
 
-                                                <td class="center">{{ row.id }}</td>
-                                                <td class="center">{{ row.name }}</td>
-                                                <td class="center">{% ifequal  row.envr_type  0 %} dev{% endifequal  %} {% ifequal  row.envr_type  1 %} test {% endifequal  %}  {% ifequal row.envr_type  2 %}  stable {%  endifequal%}
-                                                {% ifequal row.envr_type  3 %}  pre {%  endifequal%} {% ifequal row.envr_type  4 %}  prod {%  endifequal%}</td>
+                                                <tr class="gradeA" id="{{ row.id }}">
 
-                                                <td class="center">  sql </td>
-                                                <td class="center">{{ row.comment }}</td>
-                                                <td class="center">{{ row.utime }}</td>
-{#                                                <td class="center">{% ifequal row.is_finished 0 %} <div style="color:red;">未执行</div> {% endifequal  %} {% ifequal row.is_finished 1 %} <div style="color:blue;">已执行</div> {% endifequal  %}</td>#}
-                                                <td class="center"> <div style="color:red;">未执行</div></td>
+                                                    <td class="center">{{ row.id }}</td>
+                                                    <td class="center">{{ row.name }}</td>
+                                                    <td class="center">{% ifequal  row.envr_type  0 %} dev{% endifequal  %} {% ifequal  row.envr_type  1 %} test {% endifequal  %}  {% ifequal row.envr_type  2 %}  stable {%  endifequal%}
+                                                    {% ifequal row.envr_type  3 %}  pre {%  endifequal%} {% ifequal row.envr_type  4 %}  prod {%  endifequal%}</td>
 
-                                                <td>
+                                                    <td class="center">  sql </td>
+                                                    <td class="center">{{ row.comment }}</td>
+                                                    <td class="center">{{ row.utime }}</td>
+                                                    <td class="center"><div style="color:red;">未执行</div> </td>
 
-                                                    <a class="btn btn-primary  btn-xs "
-                                                       href="{% url  'tools_update'  row.id   %}">编辑</a>
-
-                                                    <button type="button" class="btn btn-danger  btn-xs  scripts_success" data-toggle="modal"
-                                                            data-target="#myModalscript">完成
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger  btn-xs  tools_del_id" data-toggle="modal"
-                                                            data-target="#myModal1">删除
-                                                    </button>
-                                                </td>
-                                            </tr>
-
-                                        {% endif %}
+                                                </tr>
+                                            {% endif %}
                                         {% endif %}
                                     {% endfor %}
 
