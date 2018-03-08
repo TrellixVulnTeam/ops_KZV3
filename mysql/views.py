@@ -35,28 +35,39 @@ def tools_add(request):
             # Script.save()
             form = ToolForm()
             return render(request, 'mysql/tools-add.html',
-                          {'form': form, "tasks_active": "active", "tools_active": "active",
+                          {'form': form,
                            "msg": "添加成功"})
+
     else:
         form = ToolForm()
     return render(request, 'mysql/tools-add.html',
-                  {'form': form, "tasks_active": "active", "tools_active": "active", })
+                  {'form': form,})
 
 
 @login_required
 def tools_update(request, nid):
-    tool_id = get_object_or_404(script, id=nid)
+    tool_id = script.objects.get(id=nid)
 
     if request.method == 'POST':
         form = ToolForm(request.POST, instance=tool_id)
         if form.is_valid():
-            asset_save = form.save()
-            return redirect('tools.html')
-
-    form = ToolForm(instance=tool_id)
-    return render(request, 'mysql/tools-update.html',
-                  {'form': form, 'nid': nid, "tasks_active": "active", "tools_active": "active", })
-
+            user = request.user.username
+            tools_save = form.save()
+            # applyer_name = request.user.username
+            # Script = script(applyer_name=applyer_name)
+            # Script.save()
+            script.objects.get(id=tool_id).delete()
+            form = ToolForm()
+            return render(request, 'mysql/tools-add.html',
+                          {'form': form,
+                           "msg": "更新成功"})
+    #         asset_save = form.save()
+    #         print(form)
+    #         return redirect('tools.html')
+    #
+    # form = ToolForm(instance=tool_id)
+    # print(form)
+    # return render(request, 'mysql/tools-update.html',{'form': form, 'nid': nid,})
 
 @login_required
 def tools_delete(request):
@@ -65,7 +76,7 @@ def tools_delete(request):
         try:
             status = '1'
             id_1 = request.POST.get("nid", None)
-            # script.objects.get(id=id_1).delete()
+            # cript.objects.get(id=id_1).delete()s
             script.objects.filter(id=id_1).update(status=status)
         except Exception as e:
             ret['status'] = False
